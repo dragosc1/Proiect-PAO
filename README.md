@@ -26,13 +26,13 @@ parcurg colectiile pana la data checkpoint-ului.
   10. Afisarea publicatiilor sortate dupa numele autorului
 
 * Lista obiecte:
-Imprumut
-Publicatie
-Carte
-Revista
-Autor
-Sectie
-ServiciuImprumut
-ServiciuPublicatie
-ServiciuUtilizator
-Utilizator
+1. Imprumut
+2. Publicatie
+3. Carte
+4. Revista
+5. Autor
+6. Sectie
+7. ServiciuImprumut
+8. ServiciuPublicatie
+9. ServiciuUtilizator
+10. Utilizator
