@@ -1,4 +1,12 @@
-package headers;
+package headers.Servicii;
+
+import headers.Publicatie.Autor;
+import headers.Actions.Imprumut;
+import headers.Publicatie.Carte;
+import headers.Publicatie.Publicatie;
+import headers.Publicatie.Revista;
+import headers.Publicatie.PublicatieComparatorTitlu;
+import headers.Publicatie.Sectie;
 
 import java.util.*;
 

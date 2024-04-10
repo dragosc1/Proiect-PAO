@@ -1,4 +1,7 @@
-package headers;
+package headers.Actions;
+
+import headers.Publicatie.Publicatie;
+import headers.Utilizator.Utilizator;
 
 import java.util.Date;
 import java.util.Objects;

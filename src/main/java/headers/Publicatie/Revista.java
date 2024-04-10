@@ -1,4 +1,4 @@
-package headers;
+package headers.Publicatie;
 
 // Clasa Revista (extinde Publicatie)
 public class Revista extends Publicatie {

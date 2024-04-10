@@ -1,4 +1,4 @@
-package headers;
+package headers.Publicatie;
 
 import java.util.Objects;
 

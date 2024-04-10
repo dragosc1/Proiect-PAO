@@ -1,4 +1,8 @@
-package headers;
+package headers.Servicii;
+
+import headers.Actions.Imprumut;
+import headers.Publicatie.Publicatie;
+import headers.Utilizator.Utilizator;
 
 import java.util.*;
 
@@ -47,7 +51,7 @@ public class ServiciuImprumut {
         for (Imprumut imprumut : listaImprumuturi) {
             if (imprumut.getUtilizator().equals(utilizator) && imprumut.getPublicatie().equals(publicatie) && imprumut.getDataReturnare() == null) {
                 imprumut.setDataReturnare(new Date());
-                imprumut.getPublicatie().setNumarExemplare(imprumut.getPublicatie().numarExemplare + 1);
+                imprumut.getPublicatie().setNumarExemplare(imprumut.getPublicatie().getNumarExemplare() + 1);
                 return;
             }
         }
