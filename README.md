@@ -1,4 +1,4 @@
-** Etapa I 
+** Etapa I **
 1) Definirea sistemului 
 Să se creeze o lista pe baza temei alese cu cel puțin 10 acțiuni/interogări care se pot face în cadrul 
 sistemului și o lista cu cel puțin 8 tipuri de obiecte. 
@@ -25,7 +25,7 @@ parcurg colectiile pana la data checkpoint-ului.
   9. Afisarea revistelor sortate dupa numarul de exemplare
   10. Afisarea publicatiilor sortate dupa numele autorului
 
-*Lista obiecte:
+* Lista obiecte:
 Imprumut
 Publicatie
 Carte
