@@ -28,11 +28,16 @@ public class Main {
         serviciuUtilizator.adaugaUtilizator(utilizator5);
 
         // Adaugarea autorilor
-        Autor autor1 = new Autor("Stephen", "King");
-        Autor autor2 = new Autor("J.K.", "Rowling");
-        Autor autor3 = new Autor("Agatha", "Christie");
-        Autor autor4 = new Autor("Dan", "Brown");
-        Autor autor5 = new Autor("Haruki", "Murakami");
+        Autor autor1 = new Autor("King", "Stephen");
+        Autor autor2 = new Autor("Rowling", "J.K.");
+        Autor autor3 = new Autor("Christie", "Agata");
+        Autor autor4 = new Autor("Brown", "Dan");
+        Autor autor5 = new Autor("Murakami", "Haruki");
+        Autor autor6 = new Autor("Hovey", "Grosvenor Gilbert");
+        Autor autor7 = new Autor("Luce", "Henry");
+        Autor autor8 = new Autor("Porter", "Rafus");
+        Autor autor9 = new Autor("Turnure", "Arthur");
+        Autor autor10 = new Autor("Ross", "Harold Wallace");
 
         // Adaugarea sectiilor
         Sectie sectie1 = new Sectie("Fiction");
@@ -40,6 +45,11 @@ public class Main {
         Sectie sectie3 = new Sectie("Mystery");
         Sectie sectie4 = new Sectie("Science Fiction");
         Sectie sectie5 = new Sectie("Romance");
+        Sectie sectie6 = new Sectie("Geography");
+        Sectie sectie7 = new Sectie("News");
+        Sectie sectie8 = new Sectie("Science");
+        Sectie sectie9 = new Sectie("Fashion");
+        Sectie sectie10 = new Sectie("Satire");
 
         // Adaugarea cărților
         Carte carte1 = new Carte("The Shining", autor1, sectie1, 1977, 2);
@@ -54,16 +64,11 @@ public class Main {
         Carte carte10 = new Carte("Pride and Prejudice", autor5, sectie5, 1813, 3);
 
         // Adaugarea revistelor
-        Revista revista1 = new Revista("National Geographic", autor2, sectie1, 2022, 1);
-        Revista revista2 = new Revista("Time", autor3, sectie2, 2023, 2);
-        Revista revista3 = new Revista("Scientific American", autor4, sectie4, 2021, 3);
-        Revista revista4 = new Revista("Vogue", autor5, sectie5, 2024, 5);
-        Revista revista5 = new Revista("The New Yorker", autor1, sectie3, 2020, 1);
-        Revista revista6 = new Revista("Wired", autor2, sectie4, 2019, 0);
-        Revista revista7 = new Revista("Sports Illustrated", autor3, sectie5, 2018, 1);
-        Revista revista8 = new Revista("Forbes", autor4, sectie1, 2017, 0);
-        Revista revista9 = new Revista("Entertainment Weekly", autor5, sectie2, 2016, 2);
-        Revista revista10 = new Revista("Nature", autor1, sectie3, 2015, 3);
+        Revista revista1 = new Revista("National Geographic", autor6, sectie6, 1888, 1);
+        Revista revista2 = new Revista("Time", autor7, sectie7, 1923, 2);
+        Revista revista3 = new Revista("Scientific American", autor8, sectie8, 1845, 3);
+        Revista revista4 = new Revista("Vogue", autor9, sectie9, 1892, 5);
+        Revista revista5 = new Revista("The New Yorker", autor10, sectie10, 1925, 0);
 
         // Adaugarea în serviciul de publicații
         serviciuPublicatie = new ServiciuPublicatie();
@@ -83,11 +88,6 @@ public class Main {
         serviciuPublicatie.adaugaPublicatie(revista3);
         serviciuPublicatie.adaugaPublicatie(revista4);
         serviciuPublicatie.adaugaPublicatie(revista5);
-        serviciuPublicatie.adaugaPublicatie(revista6);
-        serviciuPublicatie.adaugaPublicatie(revista7);
-        serviciuPublicatie.adaugaPublicatie(revista8);
-        serviciuPublicatie.adaugaPublicatie(revista9);
-        serviciuPublicatie.adaugaPublicatie(revista10);
 
 
         // Imprumuturi
