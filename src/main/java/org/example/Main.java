@@ -12,6 +12,7 @@ public class Main {
     private static ServiciuPublicatie serviciuPublicatie;
     private static ServiciuImprumut serviciuImprumut;
 
+
     public static void seeding() {
         Utilizator utilizator1 = new Utilizator("John Doe", "123 Main Street", "555-1234");
         Utilizator utilizator2 = new Utilizator("Jane Smith", "456 Oak Avenue", "555-5678");
@@ -26,21 +27,21 @@ public class Main {
         serviciuUtilizator.adaugaUtilizator(utilizator4);
         serviciuUtilizator.adaugaUtilizator(utilizator5);
 
-        // Adăugarea autorilor
+        // Adaugarea autorilor
         Autor autor1 = new Autor("Stephen", "King");
         Autor autor2 = new Autor("J.K.", "Rowling");
         Autor autor3 = new Autor("Agatha", "Christie");
         Autor autor4 = new Autor("Dan", "Brown");
         Autor autor5 = new Autor("Haruki", "Murakami");
 
-        // Adăugarea sectiilor
+        // Adaugarea sectiilor
         Sectie sectie1 = new Sectie("Fiction");
         Sectie sectie2 = new Sectie("Fantasy");
         Sectie sectie3 = new Sectie("Mystery");
         Sectie sectie4 = new Sectie("Science Fiction");
         Sectie sectie5 = new Sectie("Romance");
 
-        // Adăugarea cărților
+        // Adaugarea cărților
         Carte carte1 = new Carte("The Shining", autor1, sectie1, 1977, 2);
         Carte carte2 = new Carte("Harry Potter and the Philosopher's Stone", autor2, sectie2, 1997, 1);
         Carte carte3 = new Carte("Murder on the Orient Express", autor3, sectie3, 1934, 1);
@@ -52,7 +53,7 @@ public class Main {
         Carte carte9 = new Carte("1984", autor4, sectie4, 1949, 5);
         Carte carte10 = new Carte("Pride and Prejudice", autor5, sectie5, 1813, 3);
 
-        // Adăugarea revistelor
+        // Adaugarea revistelor
         Revista revista1 = new Revista("National Geographic", autor2, sectie1, 2022, 1);
         Revista revista2 = new Revista("Time", autor3, sectie2, 2023, 2);
         Revista revista3 = new Revista("Scientific American", autor4, sectie4, 2021, 3);
@@ -64,7 +65,7 @@ public class Main {
         Revista revista9 = new Revista("Entertainment Weekly", autor5, sectie2, 2016, 2);
         Revista revista10 = new Revista("Nature", autor1, sectie3, 2015, 3);
 
-        // Adăugarea în serviciul de publicații
+        // Adaugarea în serviciul de publicații
         serviciuPublicatie = new ServiciuPublicatie();
         serviciuPublicatie.adaugaPublicatie(carte1);
         serviciuPublicatie.adaugaPublicatie(carte2);
@@ -147,6 +148,44 @@ public class Main {
         for (Publicatie publicatie : publicatiiAutor) {
             System.out.println(publicatie.getTitlu());
         }
+
+        // 6. Sa se afiseze toate publicatiile imprumutate de catre un utilizator
+        Utilizator utilizator = new Utilizator("John Doe", "123 Main Street", "555-1234");
+        List<Publicatie> publicatiiImprumutate = serviciuImprumut.cautarePublicatiiImprumutateDeUtilizator(utilizator);
+        System.out.println();
+        System.out.println("Publicatiile imprumutate de utilizatorul " + utilizator.getNume() + ":");
+        for (Publicatie publicatie : publicatiiImprumutate) {
+            System.out.println("Titlu: " + publicatie.getTitlu());
+        }
+
+        // 7. Sa se poata returna o carte din perspectiva unui utilizator
+        Autor autor = new Autor("Stephen", "King");
+        Sectie sectie = new Sectie("Fiction");
+        Carte carte = new Carte("The Shining", autor, sectie, 1977, 1);
+
+        serviciuImprumut.returnarePublicatie(utilizator, carte);
+        System.out.println();
+
+        // 8. Afisarea cartilor sortate dupa anul de publicatie
+        System.out.println("Cartile sortate dupa anul de publicatie:");
+        for (Carte carte1 : serviciuPublicatie.getCartiSortateDupaAn()) {
+            System.out.println(carte1);
+        }
+        System.out.println();
+
+        // 9. Afisarea revistelor sortate dupa numarul de exemplare
+        System.out.println("Revistele sortate dupa numarul de exemplare:");
+        for (Revista revista : serviciuPublicatie.getRevisteSortateDupaNumarExemplare()) {
+            System.out.println(revista);
+        }
+        System.out.println();
+
+        // 10. Afisarea publicatiilor sortate dupa numele autorului
+        System.out.println("Publicatiile sortate dupa numele autorului:");
+        for (Publicatie publicatie : serviciuPublicatie.getPublicatiiSortateDupaAutor()) {
+            System.out.println(publicatie);
+        }
+
 
     }
 }
