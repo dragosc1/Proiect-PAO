@@ -1,4 +1,4 @@
-package headers.Publicatie;
+package Classes.Publicatie;
 
 // Clasa Carte (extinde Publicatie)
 public class Carte extends Publicatie {

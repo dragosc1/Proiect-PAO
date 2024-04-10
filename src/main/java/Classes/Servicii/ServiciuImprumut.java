@@ -1,8 +1,8 @@
-package headers.Servicii;
+package Classes.Servicii;
 
-import headers.Actions.Imprumut;
-import headers.Publicatie.Publicatie;
-import headers.Utilizator.Utilizator;
+import Classes.Actions.Imprumut;
+import Classes.Publicatie.Publicatie;
+import Classes.Utilizator.Utilizator;
 
 import java.util.*;
 

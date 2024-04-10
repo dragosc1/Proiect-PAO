@@ -1,11 +1,11 @@
 package org.example;
 
-import headers.Actions.Imprumut;
-import headers.Publicatie.*;
-import headers.Servicii.ServiciuImprumut;
-import headers.Servicii.ServiciuPublicatie;
-import headers.Servicii.ServiciuUtilizator;
-import headers.Utilizator.Utilizator;
+import Classes.Actions.Imprumut;
+import Classes.Publicatie.*;
+import Classes.Servicii.ServiciuImprumut;
+import Classes.Servicii.ServiciuPublicatie;
+import Classes.Servicii.ServiciuUtilizator;
+import Classes.Utilizator.Utilizator;
 
 import java.util.Date;
 import java.util.List;
@@ -188,7 +188,6 @@ public class Main {
         for (Publicatie publicatie : serviciuPublicatie.getPublicatiiSortateDupaAutor()) {
             System.out.println(publicatie);
         }
-
 
     }
 }

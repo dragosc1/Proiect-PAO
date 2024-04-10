@@ -1,7 +1,7 @@
-package headers.Actions;
+package Classes.Actions;
 
-import headers.Publicatie.Publicatie;
-import headers.Utilizator.Utilizator;
+import Classes.Publicatie.Publicatie;
+import Classes.Utilizator.Utilizator;
 
 import java.util.Date;
 import java.util.Objects;

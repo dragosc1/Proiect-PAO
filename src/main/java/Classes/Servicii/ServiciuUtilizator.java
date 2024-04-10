@@ -1,6 +1,6 @@
-package headers.Servicii;
+package Classes.Servicii;
 
-import headers.Utilizator.Utilizator;
+import Classes.Utilizator.Utilizator;
 
 import java.util.ArrayList;
 import java.util.List;

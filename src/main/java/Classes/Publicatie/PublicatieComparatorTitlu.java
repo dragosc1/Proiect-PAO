@@ -1,6 +1,4 @@
-package headers.Publicatie;
-
-import headers.Publicatie.Publicatie;
+package Classes.Publicatie;
 
 import java.util.Comparator;
 
