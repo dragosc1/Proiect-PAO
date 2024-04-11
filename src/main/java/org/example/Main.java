@@ -1,192 +1,193 @@
 package org.example;
 
-import Classes.Actions.Imprumut;
-import Classes.Publicatie.*;
-import Classes.Servicii.ServiciuImprumut;
-import Classes.Servicii.ServiciuPublicatie;
-import Classes.Servicii.ServiciuUtilizator;
-import Classes.Utilizator.Utilizator;
+import Classes.Actions.Loan;
+import Classes.Publication.*;
+import Classes.Services.LoanService;
+import Classes.Services.PublicationService;
+import Classes.Services.UserService;
+import Classes.User.User;
 
 import java.util.Date;
 import java.util.List;
 
 public class Main {
-    private static ServiciuUtilizator serviciuUtilizator;
-    private static ServiciuPublicatie serviciuPublicatie;
-    private static ServiciuImprumut serviciuImprumut;
+    private static UserService userService;
+    private static PublicationService publicationService;
+    private static LoanService loanService;
 
 
     public static void seeding() {
-        Utilizator utilizator1 = new Utilizator("John Doe", "123 Main Street", "555-1234");
-        Utilizator utilizator2 = new Utilizator("Jane Smith", "456 Oak Avenue", "555-5678");
-        Utilizator utilizator3 = new Utilizator("Alice Johnson", "789 Elm Street", "555-9876");
-        Utilizator utilizator4 = new Utilizator("Michael Brown", "567 Pine Street", "555-5432");
-        Utilizator utilizator5 = new Utilizator("Emily Davis", "890 Maple Street", "555-7890");
+        User user1 = new User("John Doe", "123 Main Street", "555-1234");
+        User user2 = new User("Jane Smith", "456 Oak Avenue", "555-5678");
+        User user3 = new User("Alice Johnson", "789 Elm Street", "555-9876");
+        User user4 = new User("Michael Brown", "567 Pine Street", "555-5432");
+        User user5 = new User("Emily Davis", "890 Maple Street", "555-7890");
 
-        serviciuUtilizator = new ServiciuUtilizator();
-        serviciuUtilizator.adaugaUtilizator(utilizator1);
-        serviciuUtilizator.adaugaUtilizator(utilizator2);
-        serviciuUtilizator.adaugaUtilizator(utilizator3);
-        serviciuUtilizator.adaugaUtilizator(utilizator4);
-        serviciuUtilizator.adaugaUtilizator(utilizator5);
+        userService = new UserService();
+        userService.addUser(user1);
+        userService.addUser(user2);
+        userService.addUser(user3);
+        userService.addUser(user4);
+        userService.addUser(user5);
 
-        // Adaugarea autorilor
-        Autor autor1 = new Autor("King", "Stephen");
-        Autor autor2 = new Autor("Rowling", "J.K.");
-        Autor autor3 = new Autor("Christie", "Agata");
-        Autor autor4 = new Autor("Brown", "Dan");
-        Autor autor5 = new Autor("Murakami", "Haruki");
-        Autor autor6 = new Autor("Hovey", "Grosvenor Gilbert");
-        Autor autor7 = new Autor("Luce", "Henry");
-        Autor autor8 = new Autor("Porter", "Rafus");
-        Autor autor9 = new Autor("Turnure", "Arthur");
-        Autor autor10 = new Autor("Ross", "Harold Wallace");
+        // Adding authors
+        Author author1 = new Author("King", "Stephen");
+        Author author2 = new Author("Rowling", "J.K.");
+        Author author3 = new Author("Christie", "Agatha");
+        Author author4 = new Author("Brown", "Dan");
+        Author author5 = new Author("Murakami", "Haruki");
+        Author author6 = new Author("Hovey", "Grosvenor Gilbert");
+        Author author7 = new Author("Luce", "Henry");
+        Author author8 = new Author("Porter", "Rafus");
+        Author author9 = new Author("Turnure", "Arthur");
+        Author author10 = new Author("Ross", "Harold Wallace");
 
-        // Adaugarea sectiilor
-        Sectie sectie1 = new Sectie("Fiction");
-        Sectie sectie2 = new Sectie("Fantasy");
-        Sectie sectie3 = new Sectie("Mystery");
-        Sectie sectie4 = new Sectie("Science Fiction");
-        Sectie sectie5 = new Sectie("Romance");
-        Sectie sectie6 = new Sectie("Geography");
-        Sectie sectie7 = new Sectie("News");
-        Sectie sectie8 = new Sectie("Science");
-        Sectie sectie9 = new Sectie("Fashion");
-        Sectie sectie10 = new Sectie("Satire");
+        // Adding sections
+        Section section1 = new Section("Fiction");
+        Section section2 = new Section("Fantasy");
+        Section section3 = new Section("Mystery");
+        Section section4 = new Section("Science Fiction");
+        Section section5 = new Section("Romance");
+        Section section6 = new Section("Geography");
+        Section section7 = new Section("News");
+        Section section8 = new Section("Science");
+        Section section9 = new Section("Fashion");
+        Section section10 = new Section("Satire");
 
-        // Adaugarea cărților
-        Carte carte1 = new Carte("The Shining", autor1, sectie1, 1977, 2);
-        Carte carte2 = new Carte("Harry Potter and the Philosopher's Stone", autor2, sectie2, 1997, 1);
-        Carte carte3 = new Carte("Murder on the Orient Express", autor3, sectie3, 1934, 1);
-        Carte carte4 = new Carte("The Da Vinci Code", autor4, sectie4, 2003, 3);
-        Carte carte5 = new Carte("Norwegian Wood", autor5, sectie5, 1987, 4);
-        Carte carte6 = new Carte("To Kill a Mockingbird", autor1, sectie1, 1960, 5);
-        Carte carte7 = new Carte("The Hobbit", autor2, sectie2, 1937, 0);
-        Carte carte8 = new Carte("The Catcher in the Rye", autor3, sectie1, 1951, 0);
-        Carte carte9 = new Carte("1984", autor4, sectie4, 1949, 5);
-        Carte carte10 = new Carte("Pride and Prejudice", autor5, sectie5, 1813, 3);
+        // Adding books
+        Book book1 = new Book("The Shining", author1, section1, 1977, 2);
+        Book book2 = new Book("Harry Potter and the Philosopher's Stone", author2, section2, 1997, 1);
+        Book book3 = new Book("Murder on the Orient Express", author3, section3, 1934, 1);
+        Book book4 = new Book("The Da Vinci Code", author4, section4, 2003, 3);
+        Book book5 = new Book("Norwegian Wood", author5, section5, 1987, 4);
+        Book book6 = new Book("To Kill a Mockingbird", author1, section1, 1960, 5);
+        Book book7 = new Book("The Hobbit", author2, section2, 1937, 0);
+        Book book8 = new Book("The Catcher in the Rye", author3, section1, 1951, 0);
+        Book book9 = new Book("1984", author4, section4, 1949, 5);
+        Book book10 = new Book("Pride and Prejudice", author5, section5, 1813, 3);
 
-        // Adaugarea revistelor
-        Revista revista1 = new Revista("National Geographic", autor6, sectie6, 1888, 1);
-        Revista revista2 = new Revista("Time", autor7, sectie7, 1923, 2);
-        Revista revista3 = new Revista("Scientific American", autor8, sectie8, 1845, 3);
-        Revista revista4 = new Revista("Vogue", autor9, sectie9, 1892, 5);
-        Revista revista5 = new Revista("The New Yorker", autor10, sectie10, 1925, 0);
+        // Adding magazines
+        Magazine magazine1 = new Magazine("National Geographic", author6, section6, 1888, 1);
+        Magazine magazine2 = new Magazine("Time", author7, section7, 1923, 2);
+        Magazine magazine3 = new Magazine("Scientific American", author8, section8, 1845, 3);
+        Magazine magazine4 = new Magazine("Vogue", author9, section9, 1892, 5);
+        Magazine magazine5 = new Magazine("The New Yorker", author10, section10, 1925, 0);
 
-        // Adaugarea în serviciul de publicații
-        serviciuPublicatie = new ServiciuPublicatie();
-        serviciuPublicatie.adaugaPublicatie(carte1);
-        serviciuPublicatie.adaugaPublicatie(carte2);
-        serviciuPublicatie.adaugaPublicatie(carte3);
-        serviciuPublicatie.adaugaPublicatie(carte4);
-        serviciuPublicatie.adaugaPublicatie(carte5);
-        serviciuPublicatie.adaugaPublicatie(carte6);
-        serviciuPublicatie.adaugaPublicatie(carte7);
-        serviciuPublicatie.adaugaPublicatie(carte8);
-        serviciuPublicatie.adaugaPublicatie(carte9);
-        serviciuPublicatie.adaugaPublicatie(carte10);
+        // Adding to the publication service
+        publicationService = new PublicationService();
+        publicationService.addPublication(book1);
+        publicationService.addPublication(book2);
+        publicationService.addPublication(book3);
+        publicationService.addPublication(book4);
+        publicationService.addPublication(book5);
+        publicationService.addPublication(book6);
+        publicationService.addPublication(book7);
+        publicationService.addPublication(book8);
+        publicationService.addPublication(book9);
+        publicationService.addPublication(book10);
 
-        serviciuPublicatie.adaugaPublicatie(revista1);
-        serviciuPublicatie.adaugaPublicatie(revista2);
-        serviciuPublicatie.adaugaPublicatie(revista3);
-        serviciuPublicatie.adaugaPublicatie(revista4);
-        serviciuPublicatie.adaugaPublicatie(revista5);
+        publicationService.addPublication(magazine1);
+        publicationService.addPublication(magazine2);
+        publicationService.addPublication(magazine3);
+        publicationService.addPublication(magazine4);
+        publicationService.addPublication(magazine5);
 
 
-        // Imprumuturi
-        Imprumut imprumut1 = new Imprumut(utilizator1, carte1, new Date(), null);
-        Imprumut imprumut2 = new Imprumut(utilizator2, revista1, new Date(), null);
-        Imprumut imprumut3 = new Imprumut(utilizator3, carte2, new Date(), null);
-        Imprumut imprumut4 = new Imprumut(utilizator4, carte3, new Date(), null);
-        Imprumut imprumut5 = new Imprumut(utilizator5, carte4, new Date(), null);
+        // Loans
+        Loan loan1 = new Loan(user1, book1, new Date(), null);
+        Loan loan2 = new Loan(user2, magazine1, new Date(), null);
+        Loan loan3 = new Loan(user3, book2, new Date(), null);
+        Loan loan4 = new Loan(user4, book3, new Date(), null);
+        Loan loan5 = new Loan(user5, book4, new Date(), null);
 
-        serviciuImprumut = new ServiciuImprumut();
-        serviciuImprumut.adaugaImprumut(imprumut1);
-        serviciuImprumut.adaugaImprumut(imprumut2);
-        serviciuImprumut.adaugaImprumut(imprumut3);
-        serviciuImprumut.adaugaImprumut(imprumut4);
-        serviciuImprumut.adaugaImprumut(imprumut5);
+        loanService = new LoanService();
+        loanService.addLoan(loan1);
+        loanService.addLoan(loan2);
+        loanService.addLoan(loan3);
+        loanService.addLoan(loan4);
+        loanService.addLoan(loan5);
     }
     public static void main(String[] args) {
         // Introducere date
         seeding();
 
         // 1. Cautarea tuturor publicatiilor dintr-o anumita sectie
-        System.out.println("Cautare publicatii din sectiunea \"Fiction\":");
-        for (Publicatie publicatie : serviciuPublicatie.cautaPublicatiiDinSectie(new Sectie("Fiction"))) {
-            System.out.println(publicatie.getTitlu());
+        System.out.println("Searching for publications in the 'Fiction' section:");
+        for (Publication publication : publicationService.searchPublicationsBySection(new Section("Fiction"))) {
+            System.out.println(publication.getTitle());
         }
         System.out.println();
 
+
         // 2. Afisarea tuturor utilizatorilor bibliotecii
-        System.out.println("Afisarea tuturor utilizatorilor bibliotecii:");
-        for (Utilizator utilizator : serviciuUtilizator.getListaUtilizatori()) {
-            System.out.println("Nume utilizator: " + utilizator.getNume());
-            System.out.println("Adresa: " + utilizator.getAdresa());
-            System.out.println("Numar de telefon: " + utilizator.getNumarTelefon());
+        System.out.println("Displaying all library users:");
+        for (User user : userService.getUserList()) {
+            System.out.println("User name: " + user.getName());
+            System.out.println("Address: " + user.getAddress());
+            System.out.println("Phone number: " + user.getPhoneNumber());
             System.out.println();
         }
 
         // 3. Sa se afiseze cartile / revistele in ordinea crescatoare a titlului
-        System.out.println("Cartile / Revistele in ordinea crescatoare a titlului\n");
-        System.out.println("----- Carti -----");
-        for (Carte carte : serviciuPublicatie.getCartiSortateDupaTitlu()) {
-            System.out.println(carte);
+        System.out.println("Books / Magazines in ascending order of title\n");
+        System.out.println("----- Books -----");
+        for (Book book : publicationService.getBooksSortedByTitle()) {
+            System.out.println(book);
         }
         System.out.println();
-        System.out.println("----- Reviste -----");
-        for (Revista revista : serviciuPublicatie.getRevisteSortateDupaTitlu()) {
-            System.out.println(revista);
+        System.out.println("----- Magazines -----");
+        for (Magazine magazine : publicationService.getMagazinesSortedByTitle()) {
+            System.out.println(magazine);
         }
 
         // 4. Sa se afiseze publicațiile disponibile pentru împrumut
-        System.out.println("\nPublicatiile disponibile pentru imprumut:");
-        for (Publicatie publicatie : serviciuPublicatie.getPublicatiiDisponibileImprumut(serviciuImprumut))
-            System.out.println(publicatie.getTitlu());
+        System.out.println("\nPublications available for loan:");
+        for (Publication publication : publicationService.getPublicationsAvailableForLoan(loanService))
+            System.out.println(publication.getTitle());
 
         // 5. Sa se afiseze publicatiile unui autor
-        System.out.println("\nPublicatiile lui Stephen King sunt:\n");
-        Autor autorCautat = new Autor("Stephen", "King");
-        List<Publicatie> publicatiiAutor = serviciuPublicatie.cautaPublicatiiDupaAutor(autorCautat);
-        for (Publicatie publicatie : publicatiiAutor) {
-            System.out.println(publicatie.getTitlu());
+        System.out.println("\nPublications by Stephen King are:\n");
+        Author author = new Author("Stephen", "King");
+        List<Publication> authorPublications = publicationService.searchPublicationsByAuthor(author);
+        for (Publication publication : authorPublications) {
+            System.out.println(publication.getTitle());
         }
 
+
         // 6. Sa se afiseze toate publicatiile imprumutate de catre un utilizator
-        Utilizator utilizator = new Utilizator("John Doe", "123 Main Street", "555-1234");
-        List<Publicatie> publicatiiImprumutate = serviciuImprumut.cautarePublicatiiImprumutateDeUtilizator(utilizator);
+        User user = new User("John Doe", "123 Main Street", "555-1234");
+        List<Publication> borrowedPublications = loanService.searchPublicationsBorrowedByUser(user);
         System.out.println();
-        System.out.println("Publicatiile imprumutate de utilizatorul " + utilizator.getNume() + ":");
-        for (Publicatie publicatie : publicatiiImprumutate) {
-            System.out.println("Titlu: " + publicatie.getTitlu());
+        System.out.println("Publications borrowed by user " + user.getName() + ":");
+        for (Publication publication : borrowedPublications) {
+            System.out.println("Title: " + publication.getTitle());
         }
 
         // 7. Sa se poata returna o carte din perspectiva unui utilizator
-        Autor autor = new Autor("Stephen", "King");
-        Sectie sectie = new Sectie("Fiction");
-        Carte carte = new Carte("The Shining", autor, sectie, 1977, 1);
+        Section section = new Section("Fiction");
+        Book book = new Book("The Shining", author, section, 1977, 1);
 
-        serviciuImprumut.returnarePublicatie(utilizator, carte);
+        loanService.returnPublication(user, book);
         System.out.println();
 
         // 8. Afisarea cartilor sortate dupa anul de publicatie
-        System.out.println("Cartile sortate dupa anul de publicatie:");
-        for (Carte carte1 : serviciuPublicatie.getCartiSortateDupaAn()) {
-            System.out.println(carte1);
+        System.out.println("Books sorted by publication year:");
+        for (Book sortedBook : publicationService.getBooksSortedByYear()) {
+            System.out.println(sortedBook);
         }
         System.out.println();
 
         // 9. Afisarea revistelor sortate dupa numarul de exemplare
-        System.out.println("Revistele sortate dupa numarul de exemplare:");
-        for (Revista revista : serviciuPublicatie.getRevisteSortateDupaNumarExemplare()) {
-            System.out.println(revista);
+        System.out.println("Magazines sorted by number of copies:");
+        for (Magazine magazine : publicationService.getMagazinesSortedByNumberOfCopies()) {
+            System.out.println(magazine);
         }
         System.out.println();
 
         // 10. Afisarea publicatiilor sortate dupa numele autorului
-        System.out.println("Publicatiile sortate dupa numele autorului:");
-        for (Publicatie publicatie : serviciuPublicatie.getPublicatiiSortateDupaAutor()) {
-            System.out.println(publicatie);
+        System.out.println("Publications sorted by author name:");
+        for (Publication publication : publicationService.getPublicationsSortedByAuthorName()) {
+            System.out.println(publication);
         }
 
     }
