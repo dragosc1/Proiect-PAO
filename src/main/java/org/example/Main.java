@@ -222,38 +222,6 @@ public class Main {
         // Introducere date
         seeding();
 
-//        GenericCRUDService<User> userService = GenericCRUDService.getInstance();
-//        for (User user : userService.retrieveAll(User.class))
-//            System.out.println(user);
-//
-//        GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
-//        for (Author author : authorService.retrieveAll(Author.class))
-//            System.out.println(author);
-//
-//        GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
-//        for (Section section : sectionService.retrieveAll(Section.class))
-//            System.out.println(section);
-//
-//        GenericCRUDService<Book> bookService = GenericCRUDService.getInstance();
-//        for (Book book : bookService.retrieveAll(Book.class))
-//            System.out.println(book);
-//
-//        GenericCRUDService<Magazine> magazineService = GenericCRUDService.getInstance();
-//        for (Magazine magazine : magazineService.retrieveAll(Magazine.class))
-//            System.out.println(magazine);
-//
-//        GenericCRUDService<Newspaper> newspaperService = GenericCRUDService.getInstance();
-//        for (Newspaper newspaper : newspaperService.retrieveAll(Newspaper.class))
-//            System.out.println(newspaper);
-//
-//        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
-//        for (Publication publication : publicationService.retrieveAll(Publication.class))
-//            System.out.println(publication);
-
-        GenericCRUDService<Loan> Loan = GenericCRUDService.getInstance();
-        for (Loan loan : Loan.retrieveAll(Loan.class))
-            System.out.println(loan);
-
         /*
         // 1. Cautarea tuturor publicatiilor dintr-o anumita sectie
         System.out.println("Searching for publications in the 'Fiction' section:");
