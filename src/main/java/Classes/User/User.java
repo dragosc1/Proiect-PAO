@@ -1,13 +1,18 @@
 package Classes.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class User {
+    private int id;
+
     private String name;
     private String address;
     private String phoneNumber;
 
-    public User(String name, String address, String phoneNumber) {
+    public User(int id, String name, String address, String phoneNumber) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -47,13 +52,33 @@ public class User {
             return false;
         }
         User user = (User) obj;
-        return Objects.equals(name, user.name) &&
+        return Objects.equals(id, user.id) &&
+                Objects.equals(name, user.name) &&
                 Objects.equals(address, user.address) &&
                 Objects.equals(phoneNumber, user.phoneNumber);
     }
 
     @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(name, address, phoneNumber);
+        return Objects.hash(id, name, address, phoneNumber);
+    }
+
+    public static User parseResultSet(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String name = resultSet.getString("name");
+        String address = resultSet.getString("address");
+        String phoneNumber = resultSet.getString("phoneNumber");
+
+        return new User(id, name, address, phoneNumber);
     }
 }

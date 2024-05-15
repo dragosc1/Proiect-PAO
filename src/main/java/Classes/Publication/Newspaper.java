@@ -4,39 +4,39 @@ import Classes.Services.GenericCRUDService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Objects;
 
-public class Magazine extends Publication {
+public class Newspaper extends Publication {
+    private Date publication_date;
 
-    private int issue_number;
-
-    public Magazine(int id, String title, Author author, Section section, int publicationYear, int numberOfCopies, int issueNumber) {
+    public Newspaper(int id, String title, Author author, Section section, int publicationYear, int numberOfCopies, Date publicationDate) {
         super(id, title, author, section, publicationYear, numberOfCopies);
-        this.issue_number = issueNumber;
+        this.publication_date = publicationDate;
     }
 
-    public int getIssueNumber() {
-        return issue_number;
+    public Date getPublicationDate() {
+        return publication_date;
     }
 
-    public void setIssueNumber(int issueNumber) {
-        this.issue_number = issueNumber;
+    public void setPublicationDate(Date publicationDate) {
+        this.publication_date = publicationDate;
     }
 
     @Override
     public String toString() {
-        return "Magazine{" +
+        return "Newspaper{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", author=" + author +
                 ", section=" + section +
                 ", publicationYear=" + publication_year +
                 ", numberOfCopies=" + number_of_copies +
-                ", issueNumber=" + issue_number +
+                ", publicationDate=" + publication_date +
                 '}';
     }
 
-    public static Magazine parseResultSet(ResultSet resultSet) throws SQLException {
+    public static Newspaper parseResultSet(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
 
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
@@ -47,7 +47,7 @@ public class Magazine extends Publication {
         Integer sectionId = publication.section_id;
         int publicationYear = publication.publication_year;
         int numberOfCopies = publication.number_of_copies;
-        int issueNumber = resultSet.getInt("issue_number");
+        Date publicationDate = resultSet.getDate("publication_date");
 
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
@@ -61,6 +61,6 @@ public class Magazine extends Publication {
         if (sectionId != null)
             section = sectionService.retrieveOneId(Section.class, sectionId);
 
-        return new Magazine(id, title, author, section, publicationYear, numberOfCopies, issueNumber);
+        return new Newspaper(id, title, author, section, publicationYear, numberOfCopies, publicationDate);
     }
 }

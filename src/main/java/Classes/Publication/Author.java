@@ -1,12 +1,18 @@
 package Classes.Publication;
 
+import Classes.User.User;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class Author {
+    private int id;
     private String name;
     private String firstName;
 
-    public Author(String lastName, String firstName) {
+    public Author(int id, String lastName, String firstName) {
+        this.id = id;
         this.name = lastName;
         this.firstName = firstName;
     }
@@ -14,6 +20,10 @@ public class Author {
     // Getters and setters
     public String getName() {
         return name;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setName(String name) {
@@ -37,12 +47,31 @@ public class Author {
             return false;
         }
         Author other = (Author) obj;
-        return Objects.equals(name, other.name) &&
+        return Objects.equals(id, other.id) &&
+                Objects.equals(name, other.name) &&
                 Objects.equals(firstName, other.firstName);
     }
 
     @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", lastName='" + name + '\'' +
+                ", firstName='" + firstName + '\'' +
+                '}';
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(name, firstName);
+        return Objects.hash(id, name, firstName);
+    }
+
+    public static Author parseResultSet(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String name = resultSet.getString("name");
+        String firstname = resultSet.getString("firstname");
+
+
+        return new Author(id, name, firstname);
     }
 }
