@@ -2,6 +2,7 @@ package Classes.RepositoriesImplementation;
 
 import Classes.Publication.Publication;
 import Classes.Repositories.GenericCRUDRepository;
+import Classes.Services.AuditService;
 import Classes.Services.GenericCRUDService;
 import oracle.jdbc.datasource.impl.OracleDataSource;
 
@@ -9,6 +10,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Date;
 
@@ -83,6 +86,7 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
 
             statement.executeUpdate();
             publicationService.closeConnection();
+
         } catch (SQLException  e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -207,6 +211,7 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             }
 
             statement.executeUpdate();
+
         } catch (SQLException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -222,6 +227,7 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             statement.executeUpdate();
 
             System.out.println("All data from table " + tableName + " deleted successfully.");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -298,6 +304,7 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
 
             statement.executeUpdate();
             publicationService.closeConnection();
+
         } catch (SQLException | IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {

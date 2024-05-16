@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class PublicationService {
@@ -69,17 +71,22 @@ public class PublicationService {
     }
 
 
-    public List<Publication> searchPublicationsByAuthor(Author searchedAuthor) {
-        List<Publication> foundPublications = new ArrayList<>();
+    public void searchPublicationsByAuthor(String name, String firstName) {
+        System.out.println("\nPublications made by King Stephen are:\n");
+
+        AuthorService authorService = AuthorService.getInstance();
+        authorService.openConnection();
+        Author searchedAuthor = authorService.getAuthorByFirstAndLastName(name, firstName);
+        authorService.closeConnection();
+
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
         publicationService.openConnection();
         for (Publication publication : publicationService.retrieveAll(Publication.class)) {
             if (searchedAuthor.equals(publication.getAuthor())) {
-                foundPublications.add(publication);
+                System.out.println(publication);
             }
         }
         publicationService.closeConnection();
-        return foundPublications;
     }
 
     public void openConnection() {
@@ -181,5 +188,89 @@ public class PublicationService {
         }
         publicationService.closeConnection();
         return foundPublications;
+    }
+
+    public void displayPublicationsSortedByAuthorName() {
+        System.out.println("Publications sorted by author name:");
+        for (Publication publication : getPublicationsSortedByAuthorName()) {
+            System.out.println(publication);
+        }
+        writeToAuditService(List.of("Display publications sorted by author name", getCurrentTimestamp()));
+    }
+
+    public void displayMagazinesSortedByNumberOfCopies() {
+        System.out.println("Magazines sorted by number of copies:");
+        for (Magazine magazine : getMagazinesSortedByNumberOfCopies()) {
+            System.out.println(magazine);
+        }
+        System.out.println();
+        writeToAuditService(List.of("Display magazines sorted by number of copies", getCurrentTimestamp()));
+    }
+
+    public void displayBooksSortedByPublicationYear() {
+        System.out.println("Books sorted by publication year:");
+        for (Book sortedBook : getBooksSortedByYear()) {
+            System.out.println(sortedBook);
+        }
+        System.out.println();
+        writeToAuditService(List.of("Display books sorted by publication year", getCurrentTimestamp()));
+    }
+
+    public void DisplayAllTypesOfPublicationsOrderedByTitle() {
+        System.out.println("Books / Magazines / Newspapers in ascending order of title\n");
+        System.out.println("----- Books -----");
+        for (Book book : getBooksSortedByTitle()) {
+            System.out.println(book);
+        }
+        System.out.println();
+        System.out.println("----- Magazines -----");
+        for (Magazine magazine : getMagazinesSortedByTitle()) {
+            System.out.println(magazine);
+        }
+        System.out.println();
+        System.out.println("----- Newspapers -----");
+        for (Newspaper newspaper : getNewspapersSortedByTitle()) {
+            System.out.println(newspaper);
+        }
+        writeToAuditService(List.of("Display all types of publications ordered by title", getCurrentTimestamp()));
+    }
+
+    public void displayAllPublicationsWhichCanBeLoaned() {
+        System.out.println("\nPublications available for loan:");
+
+        for (Publication publication : getPublicationsAvailableForLoan())
+            System.out.println(publication.getTitle());
+        System.out.println();
+        writeToAuditService(List.of("Display all publications which can be loaned", getCurrentTimestamp()));
+    }
+
+    public void searchPublicationsFromASection(String section) {
+        System.out.println();
+        System.out.println("Searching for publications in the " + section + " section:");
+
+        SectionService sectionService = SectionService.getInstance();
+
+        sectionService.openConnection();
+        Section section_to_find = sectionService.retrieveSectionByName(section);
+        sectionService.closeConnection();
+
+        PublicationService publicationService = PublicationService.getInstance();
+        publicationService.openConnection();
+        for (Publication publication : publicationService.searchPublicationsBySection(section_to_find)) {
+            System.out.println(publication);
+        }
+        System.out.println();
+        writeToAuditService(List.of("Search publication from section " + section, getCurrentTimestamp()));
+    }
+
+    private void writeToAuditService(List<String> data) {
+        AuditService auditService = AuditService.getInstance();
+        auditService.writeToOperationsCSV(data);
+    }
+
+    private static String getCurrentTimestamp() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
     }
 }

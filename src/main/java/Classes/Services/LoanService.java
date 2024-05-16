@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class LoanService {
@@ -83,7 +85,11 @@ public class LoanService {
         return false;
     }
 
-    public List<Publication> searchPublicationsBorrowedByUser(User user) {
+    public void searchPublicationsBorrowedByUser(int Id) {
+        GenericCRUDService<User> userCRUDService = GenericCRUDService.getInstance();
+        userCRUDService.openConnection();
+        User user = userCRUDService.retrieveOneId(User.class, Id);
+        userCRUDService.closeConnection();
         List<Publication> borrowedPublications = new ArrayList<>();
 
         try {
@@ -109,10 +115,25 @@ public class LoanService {
             e.printStackTrace();
         }
 
-        return borrowedPublications;
+        System.out.println();
+        System.out.println("Publications borrowed by user " + user.getName() + ":");
+        for (Publication publication : borrowedPublications) {
+            System.out.println(publication);
+        }
+        writeToAuditService(List.of("Search publications borrowed by user " + Id, getCurrentTimestamp()));
     }
 
-    public void returnPublication(User user, Publication publication) {
+    public void returnPublication(int idUser, int idPublication) {
+        GenericCRUDService<User> userCRUDService = GenericCRUDService.getInstance();
+        userCRUDService.openConnection();
+        User user = userCRUDService.retrieveOneId(User.class, idUser);
+        userCRUDService.closeConnection();
+
+        GenericCRUDService<Publication> publicationCRUDService = GenericCRUDService.getInstance();
+        publicationCRUDService.openConnection();
+        Publication publication = publicationCRUDService.retrieveOneId(Publication.class, idPublication);
+        publicationCRUDService.closeConnection();
+
         try {
             // Query the loan associated with the given user and publication
             String sql = "SELECT * FROM Loan WHERE user_id = ? AND publication_id = ?";
@@ -141,5 +162,17 @@ public class LoanService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        writeToAuditService(List.of("User " + idUser + " has return publication with id " + idPublication, getCurrentTimestamp()));
+    }
+
+    private void writeToAuditService(List<String> data) {
+        AuditService auditService = AuditService.getInstance();
+        auditService.writeToOperationsCSV(data);
+    }
+
+    private static String getCurrentTimestamp() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
     }
 }

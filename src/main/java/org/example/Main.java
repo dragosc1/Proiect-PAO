@@ -5,6 +5,8 @@ import Classes.Publication.*;
 import Classes.Services.*;
 import Classes.User.User;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -249,121 +251,56 @@ public class Main {
         // Seeding data
         seeding();
 
-        // 1. Cautarea tuturor publicatiilor dintr-o anumita sectie
-        System.out.println();
-        System.out.println("Searching for publications in the 'Fiction' section:");
-
-        SectionService sectionService = SectionService.getInstance();
-
-        sectionService.openConnection();
-        Section section_to_find = sectionService.retrieveSectionByName("Fiction");
-        sectionService.closeConnection();
-
+        // 1. Search all publications in a section
         PublicationService publicationService = PublicationService.getInstance();
         publicationService.openConnection();
-        for (Publication publication : publicationService.searchPublicationsBySection(section_to_find)) {
-            System.out.println(publication);
-        }
-        System.out.println();
+        publicationService.searchPublicationsFromASection("Fiction");
         publicationService.closeConnection();
 
-        // 2. Afisarea tuturor utilizatorilor bibliotecii
-        System.out.println("Displaying all library users:");
-        GenericCRUDService<User> userCRUDService = GenericCRUDService.getInstance();
-        userCRUDService.openConnection();
+        // 2. Show all library users
+        UserService userService = UserService.getInstance();
+        userService.displayAllLibraryUsers();
+        userService.closeConnection();
 
-        for (User user : userCRUDService.retrieveAll(User.class))
-            System.out.println(user);
-        userCRUDService.closeConnection();
-
-        // 3. Sa se afiseze cartile / revistele / ziarele in ordinea crescatoare a titlului
+        // 3. Display all books / magazines / newspapers ordered by title
         publicationService.openConnection();
-        System.out.println("Books / Magazines / Newspapers in ascending order of title\n");
-        System.out.println("----- Books -----");
-        for (Book book : publicationService.getBooksSortedByTitle()) {
-            System.out.println(book);
-        }
-        System.out.println();
-        System.out.println("----- Magazines -----");
-        for (Magazine magazine : publicationService.getMagazinesSortedByTitle()) {
-            System.out.println(magazine);
-        }
-        System.out.println();
-        System.out.println("----- Newspapers -----");
-        for (Newspaper newspaper : publicationService.getNewspapersSortedByTitle()) {
-            System.out.println(newspaper);
-        }
+        publicationService.DisplayAllTypesOfPublicationsOrderedByTitle();
         publicationService.closeConnection();
 
-        // 4. Sa se afiseze publicațiile disponibile pentru împrumut
-        System.out.println("\nPublications available for loan:");
-
-        for (Publication publication : publicationService.getPublicationsAvailableForLoan())
-            System.out.println(publication.getTitle());
-
-
-        // 5. Sa se afiseze publicatiile unui autor
-        System.out.println("\nPublications made by King Stephen are:\n");
-
-        AuthorService authorService = AuthorService.getInstance();
-        authorService.openConnection();
-        Author searchedAuthor = authorService.getAuthorByFirstAndLastName("King", "Stephen");
-        authorService.closeConnection();
-
+        // 4. Display all publications which can be loaned
         publicationService.openConnection();
-        List<Publication> authorPublications = publicationService.searchPublicationsByAuthor(searchedAuthor);
+        publicationService.displayAllPublicationsWhichCanBeLoaned();
         publicationService.closeConnection();
 
-        for (Publication publication : authorPublications) {
-            System.out.println(publication.getTitle());
-        }
+        // 5. Display all publications made by an author
+        publicationService.openConnection();
+        publicationService.searchPublicationsByAuthor("King", "Stephen");
+        publicationService.closeConnection();
 
-        // 6. Sa se afiseze toate publicatiile imprumutate de catre un utilizator
-        userCRUDService.openConnection();
-        User user = userCRUDService.retrieveOneId(User.class, 1);
-        userCRUDService.closeConnection();
-
+        // 6. Display all publications loaned by a user
         LoanService loanService = LoanService.getInstance();
         loanService.openConnection();
-
-        List<Publication> borrowedPublications = loanService.searchPublicationsBorrowedByUser(user);
-        System.out.println();
-        System.out.println("Publications borrowed by user " + user.getName() + ":");
-        for (Publication publication : borrowedPublications) {
-            System.out.println(publication);
-        }
-
+        loanService.searchPublicationsBorrowedByUser(1);
         loanService.closeConnection();
 
-        // 7. Sa se poata returna o carte din perspectiva unui utilizator
+        // 7. Make a query such that you can return a Publication from a user perspective.
         loanService.openConnection();
-        loanService.returnPublication(user, borrowedPublications.get(0));
+        loanService.returnPublication(1, 1);
         loanService.closeConnection();
 
-        // 8. Afisarea cartilor sortate dupa anul de publicatie
+        // 8. Display books sorted by publication year
         publicationService.openConnection();
-        System.out.println("Books sorted by publication year:");
-        for (Book sortedBook : publicationService.getBooksSortedByYear()) {
-            System.out.println(sortedBook);
-        }
-        System.out.println();
+        publicationService.displayBooksSortedByPublicationYear();
         publicationService.closeConnection();
 
-        // 9. Afisarea revistelor sortate dupa numarul de exemplare
+        // 9. Display magazines sorted by number of copies
         publicationService.openConnection();
-        System.out.println("Magazines sorted by number of copies:");
-        for (Magazine magazine : publicationService.getMagazinesSortedByNumberOfCopies()) {
-            System.out.println(magazine);
-        }
-        System.out.println();
+        publicationService.displayMagazinesSortedByNumberOfCopies();
         publicationService.closeConnection();
 
-        // 10. Afisarea publicatiilor sortate dupa numele autorului
+        // 10. Display publications sorted by author name
         publicationService.openConnection();
-        System.out.println("Publications sorted by author name:");
-        for (Publication publication : publicationService.getPublicationsSortedByAuthorName()) {
-            System.out.println(publication);
-        }
+        publicationService.displayPublicationsSortedByAuthorName();
         publicationService.closeConnection();
     }
 }
