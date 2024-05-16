@@ -14,25 +14,40 @@ parcurg colectiile pana la data checkpoint-ului.
 • o clasa Main din care sunt făcute apeluri către servicii
 
 * Lista actiuni / interogari:
-  1. Cautarea tuturor publicatiilor dintr-o anumita sectie
-  2. Afisarea tuturor utilizatorilor bibliotecii
-  3. Sa se afiseze cartile / revistele in ordinea crescatoare a titlului
-  4. Sa se afiseze publicațiile disponibile pentru împrumut
-  5. Sa se afiseze publicatiile unui autor
-  6. Sa se afiseze toate publicatiile imprumutate de catre un utilizator
-  7. Sa se poata returna o carte din perspectiva unui utilizator
-  8. Afisarea cartilor sortate dupa anul de publicatie
-  9. Afisarea revistelor sortate dupa numarul de exemplare
-  10. Afisarea publicatiilor sortate dupa numele autorului
+  1. Search all publications in a section
+  2. Show all library users
+  3. Display all books / magazines / newspapers ordered by title
+  4. Display all publications which can be loaned
+  5. Display all publications made by an author
+  6. Display all publications loaned by a user
+  7. Make a query such that you can return a Publication from a user perspective
+  8. Display books sorted by publication year
+  9. Display magazines sorted by number of copies
+  10. Display publications sorted by author name
 
 * Lista obiecte:
-1. Imprumut
-2. Publicatie
-3. Carte
-4. Revista
-5. Autor
-6. Sectie
-7. ServiciuImprumut
-8. ServiciuPublicatie
-9. ServiciuUtilizator
-10. Utilizator
+1. Loan
+2. Publication
+3. PublicationService
+4. Book
+6. Magazine
+7. Newspaper
+8. Author
+9. AuthorService
+10. Section
+11. SectionService
+12. User
+13. UserService
+14. GenericCRUDService
+15. AuditService
+
+<b> Etapa 2 </b>
+Etapa II 
+1) Extindeți proiectul din prima etapa prin realizarea persistentei utilizând o baza de date relationala 
+si JDBC. 
+Să se realizeze servicii care sa expună operații de tip create, read, update si delete pentru cel puțin 4 
+dintre clasele definite. Se vor realiza servicii singleton generice pentru scrierea și citirea din baza de 
+date. 
+2) Realizarea unui serviciu de audit 
+Se va realiza un serviciu care sa scrie într-un fișier de tip CSV de fiecare data când este executată una 
+dintre acțiunile descrise în prima etapa. Structura fișierului: nume_actiune, timestamp
