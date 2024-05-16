@@ -32,6 +32,10 @@ public class Publication {
         this.id = id;
     }
 
+    public Publication createCopy() {
+        return new Publication(this.id, this.title, this.author, this.section, this.publication_year, this.number_of_copies);
+    }
+
     public int getId() {
         return this.id;
     }
@@ -121,6 +125,9 @@ public class Publication {
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
 
+        authorService.openConnection();
+        sectionService.openConnection();
+
         Author author = null;
         Section section = null;
 
@@ -129,6 +136,9 @@ public class Publication {
 
         if (sectionId != null)
             section = sectionService.retrieveOneId(Section.class, sectionId);
+
+        authorService.closeConnection();
+        sectionService.closeConnection();
 
         return new Publication(id, title, author, section, publicationYear, numberOfCopies);
     }

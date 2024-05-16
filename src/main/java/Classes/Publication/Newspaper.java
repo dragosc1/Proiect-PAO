@@ -15,6 +15,10 @@ public class Newspaper extends Publication {
         this.publication_date = publicationDate;
     }
 
+    public Newspaper createCopy() {
+        return new Newspaper(id, title, author, section, publication_year, number_of_copies, publication_date);
+    }
+
     public Date getPublicationDate() {
         return publication_date;
     }
@@ -40,7 +44,9 @@ public class Newspaper extends Publication {
         int id = resultSet.getInt("id");
 
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
         Publication publication = publicationService.retrieveOneId(Publication.class, id);
+        publicationService.closeConnection();
 
         String title = publication.title;
         Integer authorId = publication.author_id;
@@ -51,6 +57,8 @@ public class Newspaper extends Publication {
 
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
+        authorService.openConnection();
+        sectionService.openConnection();
 
         Author author = null;
         Section section = null;
@@ -60,6 +68,9 @@ public class Newspaper extends Publication {
 
         if (sectionId != null)
             section = sectionService.retrieveOneId(Section.class, sectionId);
+
+        authorService.closeConnection();
+        sectionService.closeConnection();
 
         return new Newspaper(id, title, author, section, publicationYear, numberOfCopies, publicationDate);
     }

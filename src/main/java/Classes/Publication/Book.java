@@ -15,6 +15,10 @@ public class Book extends Publication {
         this.ISBN = ISBN;
     }
 
+    public Book createCopy() {
+        return new Book(id, title, author, section, publication_year, number_of_copies, ISBN);
+    }
+
     @Override
     public String toString() {
         return "Book{" +
@@ -40,7 +44,9 @@ public class Book extends Publication {
         int id = resultSet.getInt("id");
 
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
         Publication publication = publicationService.retrieveOneId(Publication.class, id);
+        publicationService.closeConnection();
 
         String title = publication.title;
         Integer authorId = publication.author_id;
@@ -52,6 +58,8 @@ public class Book extends Publication {
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
 
+        authorService.openConnection();
+        sectionService.openConnection();
         Author author = null;
         Section section = null;
 
@@ -60,6 +68,9 @@ public class Book extends Publication {
 
         if (sectionId != null)
             section = sectionService.retrieveOneId(Section.class, sectionId);
+
+        authorService.closeConnection();
+        sectionService.closeConnection();
 
         return new Book(id, title, author, section, publicationYear, numberOfCopies, ISBN);
     }

@@ -81,4 +81,8 @@ public class User {
 
         return new User(id, name, address, phoneNumber);
     }
+
+    public int getId() {
+        return id;
+    }
 }

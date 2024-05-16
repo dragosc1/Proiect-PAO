@@ -1,132 +1,185 @@
 package Classes.Services;
 
-import Classes.Publication.Author;
+import Classes.Publication.*;
 import Classes.Actions.Loan;
-import Classes.Publication.Book;
-import Classes.Publication.Publication;
-import Classes.Publication.Magazine;
-import Classes.Publication.PublicationTitleComparer;
-import Classes.Publication.Section;
+import oracle.jdbc.datasource.impl.OracleDataSource;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class PublicationService {
-    private List<Publication> publicationList;
+    private static PublicationService instance;
+
+    private Connection connection;
 
     public PublicationService() {
-        publicationList = new ArrayList<>();
     }
 
-
-    // Methods for managing publications
-    public void addPublication(Publication publication) {
-        publicationList.add(publication);
+    public static synchronized PublicationService getInstance() {
+        if (instance == null) {
+            instance = new PublicationService();
+        }
+        return instance;
     }
-
-    public List<Publication> getPublicationList() {
-        return publicationList;
-    }
-
-
-    // Method for searching publications in a specific section
     public List<Publication> searchPublicationsBySection(Section section) {
         List<Publication> foundPublications = new ArrayList<>();
-        for (Publication publication : publicationList) {
+        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
+        for (Publication publication : publicationService.retrieveAll(Publication.class)) {
             if (publication.getSection().equals(section)) {
                 foundPublications.add(publication);
             }
         }
+        publicationService.closeConnection();
         return foundPublications;
     }
 
-    // Method to get all books
-    public List<Book> getBooks() {
-        List<Book> books = new ArrayList<>();
-        for (Publication publication : publicationList) {
-            if (publication instanceof Book) {
-                books.add((Book) publication);
-            }
-        }
-        return books;
-    }
 
-    // Method to get all magazines
-    public List<Magazine> getMagazines() {
-        List<Magazine> magazines = new ArrayList<>();
-        for (Publication publication : publicationList) {
-            if (publication instanceof Magazine) {
-                magazines.add((Magazine) publication);
-            }
-        }
-        return magazines;
-    }
-
-    // Method to get all books sorted by title
     public Set<Book> getBooksSortedByTitle() {
-        Set<Book> books = new TreeSet<>(new PublicationTitleComparer());
-        for (Publication publication : publicationList) {
-            if (publication instanceof Book) {
-                books.add((Book) publication);
-            }
-        }
-        return books;
+        GenericCRUDService<Book> bookService = GenericCRUDService.getInstance();
+        bookService.openConnection();
+        List<Book> books = bookService.retrieveAll(Book.class);
+        Set<Book> sortedBooks = new TreeSet<>(new PublicationTitleComparer());
+        sortedBooks.addAll(books);
+        bookService.closeConnection();
+        return sortedBooks;
     }
 
-    // Method to get all magazines sorted by title
     public Set<Magazine> getMagazinesSortedByTitle() {
-        Set<Magazine> magazines = new TreeSet<>(new PublicationTitleComparer());
-        for (Publication publication : publicationList) {
-            if (publication instanceof Magazine) {
-                magazines.add((Magazine) publication);
-            }
-        }
-        return magazines;
+        GenericCRUDService<Magazine> magazineService = GenericCRUDService.getInstance();
+        magazineService.openConnection();
+        List<Magazine> magazines = magazineService.retrieveAll(Magazine.class);
+        Set<Magazine> sortedMagazines = new TreeSet<>(new PublicationTitleComparer());
+        sortedMagazines.addAll(magazines);
+        magazineService.closeConnection();
+        return sortedMagazines;
     }
 
-    public List<Publication> getPublicationsAvailableForLoan(LoanService loanService) {
-        List<Publication> result = new ArrayList<>();
-        for (Publication publication : publicationList) {
-            boolean available = true;
-            // Check if there is an active loan for this publication
-            for (Loan loan : loanService.getLoanList()) {
-                if (loan.getPublication().equals(publication) && loan.getReturnDate() == null) {
-                    available = false;
-                    break;
-                }
-            }
-            // Check if there are available copies for loan
-            if (available && publication.getNumberOfCopies() > 0) {
-                result.add(publication);
-            }
-        }
-        return result;
+    public Set<Newspaper> getNewspapersSortedByTitle() {
+        GenericCRUDService<Newspaper> newspaperService = GenericCRUDService.getInstance();
+        newspaperService.openConnection();
+        List<Newspaper> newspapers = newspaperService.retrieveAll(Newspaper.class);
+        Set<Newspaper> sortedNewspapers = new TreeSet<>(new PublicationTitleComparer());
+        sortedNewspapers.addAll(newspapers);
+        newspaperService.closeConnection();
+        return sortedNewspapers;
     }
+
 
     public List<Publication> searchPublicationsByAuthor(Author searchedAuthor) {
-        List<Publication> publicationsByAuthor = new ArrayList<>();
-        for (Publication publication : publicationList) {
-            if (publication.getAuthor().equals(searchedAuthor)) {
-                publicationsByAuthor.add(publication);
+        List<Publication> foundPublications = new ArrayList<>();
+        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
+        for (Publication publication : publicationService.retrieveAll(Publication.class)) {
+            if (searchedAuthor.equals(publication.getAuthor())) {
+                foundPublications.add(publication);
             }
         }
-        return publicationsByAuthor;
+        publicationService.closeConnection();
+        return foundPublications;
+    }
+
+    public void openConnection() {
+        try {
+            OracleDataSource obs = new OracleDataSource();
+            obs.setURL("jdbc:oracle:thin:@localhost:1522:XE");
+            obs.setUser("c##dragosc1");
+            obs.setPassword(System.getenv("DB_PASSWORD"));
+            connection = obs.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public List<Book> getBooksSortedByYear() {
-        List<Book> books = getBooks();
-        Collections.sort(books, Comparator.comparingInt(Book::getPublicationYear));
-        return books;
+        List<Book> sortedBooks = new ArrayList<>();
+        try {
+            String sql = "SELECT b.*, p.* FROM Book b JOIN Publication p ON b.id = p.id ORDER BY p.publication_year";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Book book;
+                GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+                publicationService.openConnection();
+                Publication publication = publicationService.retrieveOneId(Publication.class, resultSet.getInt("id"));
+                publicationService.closeConnection();
+                book = new Book(resultSet.getInt("id"), publication.getTitle(), publication.getAuthor(), publication.getSection(), publication.getPublicationYear(), publication.getNumberOfCopies(), resultSet.getString("ISBN"));
+                sortedBooks.add(book);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sortedBooks;
     }
 
     public List<Magazine> getMagazinesSortedByNumberOfCopies() {
-        List<Magazine> magazines = getMagazines();
-        Collections.sort(magazines, Comparator.comparingInt(Magazine::getNumberOfCopies));
-        return magazines;
+        List<Magazine> sortedMagazines = new ArrayList<>();
+        try {
+            String sql = "SELECT m.*, p.* FROM Magazine m JOIN Publication p ON m.id = p.id ORDER BY p.number_of_copies";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                Magazine magazine;
+                GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+                publicationService.openConnection();
+                Publication publication = publicationService.retrieveOneId(Publication.class, resultSet.getInt("id"));
+                publicationService.closeConnection();
+                magazine = new Magazine(resultSet.getInt("id"), publication.getTitle(), publication.getAuthor(), publication.getSection(), publication.getPublicationYear(), publication.getNumberOfCopies(), resultSet.getInt("issue_number"));
+                sortedMagazines.add(magazine);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sortedMagazines;
     }
 
     public List<Publication> getPublicationsSortedByAuthorName() {
-        List<Publication> publications = publicationList;
-        Collections.sort(publications, Comparator.comparing(pub -> pub.getAuthor().getName()));
-        return publications;
+        List<Publication> sortedPublications = new ArrayList<>();
+        try {
+            String sql = "SELECT p.*, a.name FROM PUBLICATION p " +
+                    "INNER JOIN Author a ON p.author_id = a.id " +
+                    "ORDER BY a.name";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+                publicationService.openConnection();
+                Publication publication = publicationService.retrieveOneId(Publication.class, resultSet.getInt("id"));
+                publicationService.closeConnection();
+                sortedPublications.add(publication);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sortedPublications;
+    }
+
+    public List<Publication> getPublicationsAvailableForLoan() {
+        List<Publication> foundPublications = new ArrayList<>();
+        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
+        for (Publication publication : publicationService.retrieveAll(Publication.class)) {
+            if (publication.getNumberOfCopies() > 0) {
+                foundPublications.add(publication);
+            }
+        }
+        publicationService.closeConnection();
+        return foundPublications;
     }
 }

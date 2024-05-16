@@ -104,8 +104,13 @@ public class Loan {
 
         GenericCRUDService<User> userService = GenericCRUDService.getInstance();
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+
+        userService.openConnection();
+        publicationService.openConnection();
         User user = userService.retrieveOneId(User.class, userId);
         Publication publication = publicationService.retrieveOneId(Publication.class, publicationId);
+        userService.closeConnection();
+        publicationService.closeConnection();
 
         return new Loan(id, user, publication, loanDate, returnDate, userId, publicationId);
     }

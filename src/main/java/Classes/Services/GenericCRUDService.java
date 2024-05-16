@@ -44,4 +44,12 @@ public class GenericCRUDService<T> {
     public void deleteAll(Class<?> clazz) {
         repository.deleteAll(clazz);
     }
+
+    public void openConnection() {
+        repository.openConnection();
+    }
+
+    public void closeConnection() {
+        repository.closeConnection();
+    }
 }

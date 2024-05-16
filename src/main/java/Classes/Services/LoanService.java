@@ -3,62 +3,143 @@ package Classes.Services;
 import Classes.Actions.Loan;
 import Classes.Publication.Publication;
 import Classes.User.User;
+import oracle.jdbc.datasource.impl.OracleDataSource;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class LoanService {
-    private Set<Loan> loanList;
+    private static LoanService instance;
+
+    private Connection connection;
 
     public LoanService() {
-        loanList = new TreeSet<>(Comparator.comparing(Loan::getLoanDate));
     }
 
-    // Methods for managing loans
-    public void addLoan(Loan loan) {
-        for (Loan existingLoan : loanList) {
-            if (existingLoan.getPublication().equals(loan.getPublication())
-                    && existingLoan.getUser().equals(loan.getUser()) && existingLoan.getReturnDate() == null) {
-                System.out.println("A loan for the same publication and user already exists!");
-                return;
+    public void openConnection() {
+        try {
+            OracleDataSource obs = new OracleDataSource();
+            obs.setURL("jdbc:oracle:thin:@localhost:1522:XE");
+            obs.setUser("c##dragosc1");
+            obs.setPassword(System.getenv("DB_PASSWORD"));
+            connection = obs.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static synchronized LoanService getInstance() {
+        if (instance == null) {
+            instance = new LoanService();
+        }
+        return instance;
+    }
+
+    public boolean canMakeLoan(Loan loan) {
+        // Check if the user has any active loans
+        GenericCRUDService<Loan> loanService = GenericCRUDService.getInstance();
+        loanService.openConnection();
+        List<Loan> userLoans = loanService.retrieveAll(Loan.class);
+
+        for (Loan userLoan : userLoans) {
+            if (userLoan.getUser().equals(loan.getUser()) && userLoan.getReturnDate() == null) {
+                // User has an active loan
+                loanService.closeConnection();
+                return false;
             }
         }
 
-        if (loan.getReturnDate() == null || loan.getReturnDate().after(new Date())) {
-            if (loan.getPublication().getNumberOfCopies() > 0) {
-                loan.getPublication().setNumberOfCopies(loan.getPublication().getNumberOfCopies() - 1);
-                loanList.add(loan);
-            } else {
-                System.out.println("No more copies available for loan!");
-            }
-        } else {
-            System.out.println("Return date must be null or in the future!");
+        // Check if the publication is available for loaning
+        Publication publication = loan.getPublication();
+        boolean isPublicationAvailable = checkPublicationAvailability(publication);
+        loanService.closeConnection();
+        return isPublicationAvailable;
+    }
+
+    private boolean checkPublicationAvailability(Publication publication) {
+        if (publication.getNumberOfCopies() > 0) {
+            GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+            publicationService.openConnection();
+            publication = publicationService.retrieveOneId(Publication.class, publication.getId());
+            Publication new_publication = publication.createCopy();
+            new_publication.setNumberOfCopies(new_publication.getNumberOfCopies() - 1);
+            publicationService.update(publication, new_publication);
+            publicationService.closeConnection();
+            return true;
         }
+        return false;
     }
 
     public List<Publication> searchPublicationsBorrowedByUser(User user) {
         List<Publication> borrowedPublications = new ArrayList<>();
 
-        for (Loan loan : loanList) {
-            if (loan.getUser().equals(user)) {
-                borrowedPublications.add(loan.getPublication());
+        try {
+            // Query loans associated with the given user
+            String sql = "SELECT * FROM Loan WHERE user_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, user.getId());
+            ResultSet resultSet = statement.executeQuery();
+
+            // Retrieve publications from loans
+            while (resultSet.next()) {
+                int publicationId = resultSet.getInt("publication_id");
+                // Assuming you have a method to retrieve a publication by its ID
+                GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+                publicationService.openConnection();
+                Publication borrowedPublication = publicationService.retrieveOneId(Publication.class, publicationId);
+                if (borrowedPublication != null) {
+                    borrowedPublications.add(borrowedPublication);
+                }
+                publicationService.closeConnection();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return borrowedPublications;
     }
 
     public void returnPublication(User user, Publication publication) {
-        for (Loan loan : loanList) {
-            if (loan.getUser().equals(user) && loan.getPublication().equals(publication) && loan.getReturnDate() == null) {
-                loan.setReturnDate(new Date());
-                loan.getPublication().setNumberOfCopies(loan.getPublication().getNumberOfCopies() + 1);
-                return;
-            }
-        }
-        System.out.println("The publication was not borrowed by this user.");
-    }
+        try {
+            // Query the loan associated with the given user and publication
+            String sql = "SELECT * FROM Loan WHERE user_id = ? AND publication_id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, user.getId());
+            statement.setInt(2, publication.getId());
+            ResultSet resultSet = statement.executeQuery();
 
-    public Set<Loan> getLoanList() {
-        return loanList;
+            if (resultSet.next()) {
+                // Update the return date of the loan to mark it as returned
+                int loanId = resultSet.getInt("id");
+                sql = "UPDATE Loan SET return_date = ? WHERE id = ?";
+                statement = connection.prepareStatement(sql);
+                statement.setDate(1, new java.sql.Date(System.currentTimeMillis()));
+                statement.setInt(2, loanId);
+
+                Publication new_publication = publication.createCopy();
+                new_publication.setNumberOfCopies(publication.getNumberOfCopies() + 1);
+                GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+                publicationService.openConnection();
+                publicationService.update(publication, new_publication);
+                publicationService.closeConnection();
+
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

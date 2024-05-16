@@ -9,4 +9,6 @@ public interface GenericCRUDRepository<T> {
     void update(T oldData, T newData);
     void delete(T data);
     void deleteAll(Class<?> clazz);
+    void openConnection();
+    void closeConnection();
 }

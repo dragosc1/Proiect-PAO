@@ -2,19 +2,13 @@ package org.example;
 
 import Classes.Actions.Loan;
 import Classes.Publication.*;
-import Classes.Services.GenericCRUDService;
-import Classes.Services.LoanService;
-import Classes.Services.PublicationService;
-import Classes.Services.UserService;
+import Classes.Services.*;
 import Classes.User.User;
 
 import java.util.Date;
 import java.util.List;
 
 public class Main {
-    private static UserService userService;
-    private static PublicationService publicationService;
-    private static LoanService loanService;
 
     public static void seeding() {
         // All services
@@ -26,6 +20,15 @@ public class Main {
         GenericCRUDService<Magazine> magazineService = GenericCRUDService.getInstance();
         GenericCRUDService<Newspaper> newspaperService = GenericCRUDService.getInstance();
         GenericCRUDService<Loan> loanService = GenericCRUDService.getInstance();
+
+        userService.openConnection();
+        authorService.openConnection();
+        sectionService.openConnection();
+        publicationService.openConnection();
+        bookService.openConnection();
+        magazineService.openConnection();
+        newspaperService.openConnection();
+        loanService.openConnection();
 
         // Deleting all data
         loanService.deleteAll(Loan.class);
@@ -212,36 +215,70 @@ public class Main {
         Loan loan4 = new Loan(4, user4, book3, new Date(), null, 4, book3.getId());
         Loan loan5 = new Loan(5, user5, book4, new Date(), null, 5, book4.getId());
 
-        loanService.insert(loan1);
-        loanService.insert(loan2);
-        loanService.insert(loan3);
-        loanService.insert(loan4);
-        loanService.insert(loan5);
+        LoanService loanservice2 = LoanService.getInstance();
+        loanservice2.openConnection();
+
+        if (loanservice2.canMakeLoan(loan1))
+            loanService.insert(loan1);
+        else System.out.println("The Publication can't be loaned");
+        if (loanservice2.canMakeLoan(loan2))
+            loanService.insert(loan2);
+        else System.out.println("The publication can't be loaned");
+        if (loanservice2.canMakeLoan(loan3))
+            loanService.insert(loan3);
+        else System.out.println("The publication can't be loaned");
+        if (loanservice2.canMakeLoan(loan4))
+            loanService.insert(loan4);
+        else System.out.println("The publication can't be loaned");
+        if (loanservice2.canMakeLoan(loan5))
+            loanService.insert(loan5);
+        else System.out.println("The publication can't be loaned");
+
+        loanservice2.closeConnection();
+
+        userService.closeConnection();
+        authorService.closeConnection();
+        sectionService.closeConnection();
+        publicationService.closeConnection();
+        bookService.closeConnection();
+        magazineService.closeConnection();
+        newspaperService.closeConnection();
+        loanService.closeConnection();
     }
     public static void main(String[] args) {
-        // Introducere date
+        // Seeding data
         seeding();
 
-        /*
         // 1. Cautarea tuturor publicatiilor dintr-o anumita sectie
+        System.out.println();
         System.out.println("Searching for publications in the 'Fiction' section:");
-        for (Publication publication : publicationService.searchPublicationsBySection(new Section("Fiction"))) {
-            System.out.println(publication.getTitle());
+
+        SectionService sectionService = SectionService.getInstance();
+
+        sectionService.openConnection();
+        Section section_to_find = sectionService.retrieveSectionByName("Fiction");
+        sectionService.closeConnection();
+
+        PublicationService publicationService = PublicationService.getInstance();
+        publicationService.openConnection();
+        for (Publication publication : publicationService.searchPublicationsBySection(section_to_find)) {
+            System.out.println(publication);
         }
         System.out.println();
-
+        publicationService.closeConnection();
 
         // 2. Afisarea tuturor utilizatorilor bibliotecii
         System.out.println("Displaying all library users:");
-        for (User user : userService.getUserList()) {
-            System.out.println("User name: " + user.getName());
-            System.out.println("Address: " + user.getAddress());
-            System.out.println("Phone number: " + user.getPhoneNumber());
-            System.out.println();
-        }
+        GenericCRUDService<User> userCRUDService = GenericCRUDService.getInstance();
+        userCRUDService.openConnection();
 
-        // 3. Sa se afiseze cartile / revistele in ordinea crescatoare a titlului
-        System.out.println("Books / Magazines in ascending order of title\n");
+        for (User user : userCRUDService.retrieveAll(User.class))
+            System.out.println(user);
+        userCRUDService.closeConnection();
+
+        // 3. Sa se afiseze cartile / revistele / ziarele in ordinea crescatoare a titlului
+        publicationService.openConnection();
+        System.out.println("Books / Magazines / Newspapers in ascending order of title\n");
         System.out.println("----- Books -----");
         for (Book book : publicationService.getBooksSortedByTitle()) {
             System.out.println(book);
@@ -251,56 +288,82 @@ public class Main {
         for (Magazine magazine : publicationService.getMagazinesSortedByTitle()) {
             System.out.println(magazine);
         }
+        System.out.println();
+        System.out.println("----- Newspapers -----");
+        for (Newspaper newspaper : publicationService.getNewspapersSortedByTitle()) {
+            System.out.println(newspaper);
+        }
+        publicationService.closeConnection();
 
         // 4. Sa se afiseze publicațiile disponibile pentru împrumut
         System.out.println("\nPublications available for loan:");
-        for (Publication publication : publicationService.getPublicationsAvailableForLoan(loanService))
+
+        for (Publication publication : publicationService.getPublicationsAvailableForLoan())
             System.out.println(publication.getTitle());
 
+
         // 5. Sa se afiseze publicatiile unui autor
-        System.out.println("\nPublications by King Stephen are:\n");
-        Author author = new Author("King", "Stephen");
-        List<Publication> authorPublications = publicationService.searchPublicationsByAuthor(author);
+        System.out.println("\nPublications made by King Stephen are:\n");
+
+        AuthorService authorService = AuthorService.getInstance();
+        authorService.openConnection();
+        Author searchedAuthor = authorService.getAuthorByFirstAndLastName("King", "Stephen");
+        authorService.closeConnection();
+
+        publicationService.openConnection();
+        List<Publication> authorPublications = publicationService.searchPublicationsByAuthor(searchedAuthor);
+        publicationService.closeConnection();
+
         for (Publication publication : authorPublications) {
             System.out.println(publication.getTitle());
         }
 
-
         // 6. Sa se afiseze toate publicatiile imprumutate de catre un utilizator
-        User user = new User(1, "John Doe", "123 Main Street", "555-1234");
+        userCRUDService.openConnection();
+        User user = userCRUDService.retrieveOneId(User.class, 1);
+        userCRUDService.closeConnection();
+
+        LoanService loanService = LoanService.getInstance();
+        loanService.openConnection();
+
         List<Publication> borrowedPublications = loanService.searchPublicationsBorrowedByUser(user);
         System.out.println();
         System.out.println("Publications borrowed by user " + user.getName() + ":");
         for (Publication publication : borrowedPublications) {
-            System.out.println("Title: " + publication.getTitle());
+            System.out.println(publication);
         }
 
-        // 7. Sa se poata returna o carte din perspectiva unui utilizator
-        Section section = new Section("Fiction");
-        Book book = new Book("The Shining", author, section, 1977, 1);
+        loanService.closeConnection();
 
-        loanService.returnPublication(user, book);
-        System.out.println();
+        // 7. Sa se poata returna o carte din perspectiva unui utilizator
+        loanService.openConnection();
+        loanService.returnPublication(user, borrowedPublications.get(0));
+        loanService.closeConnection();
 
         // 8. Afisarea cartilor sortate dupa anul de publicatie
+        publicationService.openConnection();
         System.out.println("Books sorted by publication year:");
         for (Book sortedBook : publicationService.getBooksSortedByYear()) {
             System.out.println(sortedBook);
         }
         System.out.println();
+        publicationService.closeConnection();
 
         // 9. Afisarea revistelor sortate dupa numarul de exemplare
+        publicationService.openConnection();
         System.out.println("Magazines sorted by number of copies:");
         for (Magazine magazine : publicationService.getMagazinesSortedByNumberOfCopies()) {
             System.out.println(magazine);
         }
         System.out.println();
+        publicationService.closeConnection();
 
         // 10. Afisarea publicatiilor sortate dupa numele autorului
+        publicationService.openConnection();
         System.out.println("Publications sorted by author name:");
         for (Publication publication : publicationService.getPublicationsSortedByAuthorName()) {
             System.out.println(publication);
         }
-        */
+        publicationService.closeConnection();
     }
 }

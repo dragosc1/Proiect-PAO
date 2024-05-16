@@ -15,6 +15,10 @@ public class Magazine extends Publication {
         this.issue_number = issueNumber;
     }
 
+    public Magazine createCopy() {
+        return new Magazine(id, title, author, section, publication_year, number_of_copies, issue_number);
+    }
+
     public int getIssueNumber() {
         return issue_number;
     }
@@ -40,7 +44,10 @@ public class Magazine extends Publication {
         int id = resultSet.getInt("id");
 
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
         Publication publication = publicationService.retrieveOneId(Publication.class, id);
+        publicationService.closeConnection();
+
 
         String title = publication.title;
         Integer authorId = publication.author_id;
@@ -52,6 +59,8 @@ public class Magazine extends Publication {
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
 
+        authorService.openConnection();
+        sectionService.openConnection();
         Author author = null;
         Section section = null;
 
@@ -60,6 +69,9 @@ public class Magazine extends Publication {
 
         if (sectionId != null)
             section = sectionService.retrieveOneId(Section.class, sectionId);
+
+        authorService.closeConnection();
+        sectionService.closeConnection();
 
         return new Magazine(id, title, author, section, publicationYear, numberOfCopies, issueNumber);
     }

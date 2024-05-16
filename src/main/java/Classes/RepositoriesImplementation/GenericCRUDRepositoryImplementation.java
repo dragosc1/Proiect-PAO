@@ -1,6 +1,8 @@
 package Classes.RepositoriesImplementation;
 
+import Classes.Publication.Publication;
 import Classes.Repositories.GenericCRUDRepository;
+import Classes.Services.GenericCRUDService;
 import oracle.jdbc.datasource.impl.OracleDataSource;
 
 import java.lang.reflect.Field;
@@ -13,15 +15,6 @@ import java.util.Date;
 public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDRepository<T> {
     private Connection connection;
     public GenericCRUDRepositoryImplementation() {
-        try {
-            OracleDataSource obs = new OracleDataSource();
-            obs.setURL("jdbc:oracle:thin:@localhost:1522:XE");
-            obs.setUser("c##dragosc1");
-            obs.setPassword(System.getenv("DB_PASSWORD"));
-            connection = obs.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
     private String getTableName(Class<?> clazz) {
         return clazz.getSimpleName().toLowerCase();
@@ -44,9 +37,11 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
 
             Field[] fields = allFields.toArray(new Field[0]);
             // Get metadata of the table to retrieve its column names
+
+            GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+            publicationService.openConnection();
             ResultSetMetaData metaData = connection.createStatement().executeQuery("SELECT * FROM " + tableName).getMetaData();
             int columnCount = metaData.getColumnCount();
-
             Set<String> tableColumnNames = new HashSet<>();
             for (int i = 1; i <= columnCount; i++)
                 tableColumnNames.add(metaData.getColumnName(i).toLowerCase());
@@ -66,6 +61,8 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
                 values.deleteCharAt(values.length() - 1);
             }
             String sql = "INSERT INTO " + tableName + " (" + columns.toString() + ") VALUES (" + values.toString() + ")";
+
+
             PreparedStatement statement = connection.prepareStatement(sql);
 
             int index = 1;
@@ -85,6 +82,7 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             }
 
             statement.executeUpdate();
+            publicationService.closeConnection();
         } catch (SQLException  e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -246,6 +244,8 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             }
 
             Field[] fields = allFields.toArray(new Field[0]);
+            GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+            publicationService.openConnection();
             // Get metadata of the table to retrieve its column names
             ResultSetMetaData metaData = connection.createStatement().executeQuery("SELECT * FROM " + tableName).getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -297,8 +297,34 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             statement.setObject(index, idField.get(oldData));
 
             statement.executeUpdate();
-        } catch (SQLException | IllegalAccessException | NoSuchFieldException e) {
+            publicationService.closeConnection();
+        } catch (SQLException | IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void openConnection() {
+        try {
+            OracleDataSource obs = new OracleDataSource();
+            obs.setURL("jdbc:oracle:thin:@localhost:1522:XE");
+            obs.setUser("c##dragosc1");
+            obs.setPassword(System.getenv("DB_PASSWORD"));
+            connection = obs.getConnection();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public void closeConnection() {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
