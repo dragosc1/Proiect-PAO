@@ -41,8 +41,7 @@ parcurg colectiile pana la data checkpoint-ului.
 14. GenericCRUDService
 15. AuditService
 
-<b> Etapa 2 </b>
-Etapa II 
+<b> Etapa II </b>
 1) Extindeți proiectul din prima etapa prin realizarea persistentei utilizând o baza de date relationala 
 si JDBC. 
 Să se realizeze servicii care sa expună operații de tip create, read, update si delete pentru cel puțin 4 
