@@ -5,6 +5,7 @@ import Classes.Publication.*;
 import Classes.Services.*;
 import Classes.User.User;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -247,7 +248,7 @@ public class Main {
         newspaperService.closeConnection();
         loanService.closeConnection();
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         // Seeding data
         seeding();
 
@@ -302,5 +303,30 @@ public class Main {
         publicationService.openConnection();
         publicationService.displayPublicationsSortedByAuthorName();
         publicationService.closeConnection();
+
+        // 11. Delete newspapers from a year
+        publicationService.openConnection();
+        publicationService.deleteNewspapersFromYear(2022);
+        publicationService.closeConnection();
+
+        // 12. Insert an author
+        AuthorService authorService = AuthorService.getInstance();
+        authorService.openConnection();
+        authorService.insertAuthorIfItsNot("King", "Stephen2");
+
+        // 13. Insert a section
+        SectionService sectionService = SectionService.getInstance();
+        sectionService.openConnection();
+        sectionService.insertSectionIFItsNot("Fiction2", "some description");
+
+        // 14. Insert a new publication which is neither a book / newspaper / magazine
+        Author author = authorService.getAuthorByFirstAndLastName("King", "Stephen2");
+        Section section = sectionService.retrieveSectionByName("Fiction2");
+        Publication publication = new Publication(21, "The shining 2", author, section, 1899, 3);
+        publicationService.openConnection();
+        publicationService.addNewPublication(publication);
+        publicationService.closeConnection();
+        authorService.closeConnection();
+        sectionService.closeConnection();
     }
 }

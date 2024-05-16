@@ -27,6 +27,7 @@ public class PublicationService {
         }
         return instance;
     }
+
     public List<Publication> searchPublicationsBySection(Section section) {
         List<Publication> foundPublications = new ArrayList<>();
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
@@ -273,5 +274,25 @@ public class PublicationService {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return now.format(formatter);
+    }
+
+    public void deleteNewspapersFromYear(int year) {
+        try {
+            String sql = "DELETE FROM Newspaper WHERE EXTRACT(YEAR FROM publication_date) = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, year);
+            statement.executeUpdate();
+            writeToAuditService(List.of("Delete newspapers from year: " + year, getCurrentTimestamp()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addNewPublication(Publication publication) {
+        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
+        publicationService.insert(publication);
+        publicationService.closeConnection();
+        writeToAuditService(List.of("Added new publication", getCurrentTimestamp()));
     }
 }

@@ -41,6 +41,10 @@ public class Publication {
         return this.id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     // Getters and setters for common attributes
     public String getTitle() {
         return title;

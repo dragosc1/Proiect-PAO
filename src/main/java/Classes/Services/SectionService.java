@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class SectionService {
     // Singleton pattern
@@ -64,4 +67,47 @@ public class SectionService {
         }
     }
 
+    public void insertSectionIFItsNot(String name, String description) throws SQLException {
+        Section existingSection = retrieveSectionByName(name);
+
+        // If the section doesn't exist, insert a new one
+        if (existingSection == null) {
+            // Prepare SQL INSERT statement
+            String sql = "INSERT INTO SECTION (id, name, description) VALUES (?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            // Get the next available ID for the section
+            int nextId;
+            String idQuery = "SELECT MAX(id) FROM SECTION";
+            PreparedStatement idStatement = connection.prepareStatement(idQuery);
+            ResultSet idResultSet = idStatement.executeQuery();
+            if (idResultSet.next()) {
+                nextId = idResultSet.getInt(1) + 1;
+            } else {
+                nextId = 1;
+            }
+
+            // Set values for the INSERT statement
+            statement.setInt(1, nextId);
+            statement.setString(2, name);
+            statement.setString(3, description);
+
+            // Execute the SQL query
+            statement.executeUpdate();
+        } else {
+            System.out.println("Section already exists!");
+        }
+        writeToAuditService(List.of("Insert section if it is not", getCurrentTimestamp()));
+    }
+
+    private void writeToAuditService(List<String> data) {
+        AuditService auditService = AuditService.getInstance();
+        auditService.writeToOperationsCSV(data);
+    }
+
+    private static String getCurrentTimestamp() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
+    }
 }
