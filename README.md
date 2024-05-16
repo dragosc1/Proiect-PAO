@@ -24,6 +24,12 @@ parcurg colectiile pana la data checkpoint-ului.
   8. Display books sorted by publication year
   9. Display magazines sorted by number of copies
   10. Display publications sorted by author name
+  11. Delete newspapers from a year
+  12. Insert a new publication which is neither a book / newspaper / magazine
+  13. Insert a new Book
+  14. Insert a new Magazine
+  15. Insert a new Newspaper
+  16. Update a magazine
 
 <b> Etapa II </b>
 1) Extindeți proiectul din prima etapa prin realizarea persistentei utilizând o baza de date relationala 
