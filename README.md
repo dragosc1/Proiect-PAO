@@ -28,7 +28,6 @@ parcurg colectiile pana la data checkpoint-ului.
   12. Insert a new author
   13. Insert a new section
   14. Insert a new publication which is neither a book / newspaper / magazine
-  15. Update a magazine
 
 <b> Etapa II </b>
 1) Extindeți proiectul din prima etapa prin realizarea persistentei utilizând o baza de date relationala 
