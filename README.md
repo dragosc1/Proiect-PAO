@@ -25,22 +25,6 @@ parcurg colectiile pana la data checkpoint-ului.
   9. Display magazines sorted by number of copies
   10. Display publications sorted by author name
 
-* Lista obiecte:
-1. Loan
-2. Publication
-3. PublicationService
-4. Book
-6. Magazine
-7. Newspaper
-8. Author
-9. AuthorService
-10. Section
-11. SectionService
-12. User
-13. UserService
-14. GenericCRUDService
-15. AuditService
-
 <b> Etapa II </b>
 1) Extindeți proiectul din prima etapa prin realizarea persistentei utilizând o baza de date relationala 
 si JDBC. 
