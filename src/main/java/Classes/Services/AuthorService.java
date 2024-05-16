@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AuthorService {
+    // Singleton pattern
     private static AuthorService instance;
 
     private Connection connection;
@@ -34,7 +35,6 @@ public class AuthorService {
 
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                // Assuming your Author class has a constructor that takes id, firstName, and lastName
                 author = new Author(id, name, firstName);
             }
         } catch (SQLException e) {

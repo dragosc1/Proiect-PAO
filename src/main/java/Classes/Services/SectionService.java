@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SectionService {
+    // Singleton pattern
     private static SectionService instance;
 
     private Connection connection;

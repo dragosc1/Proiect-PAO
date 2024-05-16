@@ -10,6 +10,7 @@ public class Magazine extends Publication {
 
     private int issue_number;
 
+    // Magazine constructor
     public Magazine(int id, String title, Author author, Section section, int publicationYear, int numberOfCopies, int issueNumber) {
         super(id, title, author, section, publicationYear, numberOfCopies);
         this.issue_number = issueNumber;
@@ -27,6 +28,7 @@ public class Magazine extends Publication {
         this.issue_number = issueNumber;
     }
 
+    // Magazine string representation
     @Override
     public String toString() {
         return "Magazine{" +
@@ -40,7 +42,9 @@ public class Magazine extends Publication {
                 '}';
     }
 
+    // Magazine parse result set
     public static Magazine parseResultSet(ResultSet resultSet) throws SQLException {
+        // gather data
         int id = resultSet.getInt("id");
 
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
@@ -56,6 +60,7 @@ public class Magazine extends Publication {
         int numberOfCopies = publication.number_of_copies;
         int issueNumber = resultSet.getInt("issue_number");
 
+        // obtain author and section
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
 
@@ -73,6 +78,7 @@ public class Magazine extends Publication {
         authorService.closeConnection();
         sectionService.closeConnection();
 
+        // return magazine
         return new Magazine(id, title, author, section, publicationYear, numberOfCopies, issueNumber);
     }
 }

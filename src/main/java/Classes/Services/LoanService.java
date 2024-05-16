@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class LoanService {
+    // Singleton pattern
     private static LoanService instance;
 
     private Connection connection;
@@ -102,7 +103,6 @@ public class LoanService {
             // Retrieve publications from loans
             while (resultSet.next()) {
                 int publicationId = resultSet.getInt("publication_id");
-                // Assuming you have a method to retrieve a publication by its ID
                 GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
                 publicationService.openConnection();
                 Publication borrowedPublication = publicationService.retrieveOneId(Publication.class, publicationId);

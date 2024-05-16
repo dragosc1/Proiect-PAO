@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class PublicationService {
+    // Singleton pattern
     private static PublicationService instance;
 
     private Connection connection;

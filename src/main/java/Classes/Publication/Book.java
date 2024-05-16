@@ -10,6 +10,7 @@ public class Book extends Publication {
 
     private String ISBN;
 
+    // Book constructor
     public Book(int id, String title, Author author, Section section, int publicationYear, int numberOfCopies, String ISBN) {
         super(id, title, author, section, publicationYear, numberOfCopies);
         this.ISBN = ISBN;
@@ -19,6 +20,7 @@ public class Book extends Publication {
         return new Book(id, title, author, section, publication_year, number_of_copies, ISBN);
     }
 
+    // Book string representation
     @Override
     public String toString() {
         return "Book{" +
@@ -40,7 +42,9 @@ public class Book extends Publication {
         this.ISBN = ISBN;
     }
 
+    // book parse result set
     public static Book parseResultSet(ResultSet resultSet) throws SQLException {
+        // gather data
         int id = resultSet.getInt("id");
 
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
@@ -55,6 +59,7 @@ public class Book extends Publication {
         int numberOfCopies = publication.number_of_copies;
         String ISBN = resultSet.getString("ISBN");
 
+        // get author and section
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
 
@@ -72,6 +77,7 @@ public class Book extends Publication {
         authorService.closeConnection();
         sectionService.closeConnection();
 
+        // return book
         return new Book(id, title, author, section, publicationYear, numberOfCopies, ISBN);
     }
 }

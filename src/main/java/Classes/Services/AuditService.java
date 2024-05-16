@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AuditService {
+    // Singleton pattern
     private static AuditService instance;
 
     public static synchronized AuditService getInstance() {
@@ -16,6 +17,8 @@ public class AuditService {
     }
     public AuditService() {
     }
+
+    // write to CSV
     public void writeToOperationsCSV(List<String> newData) {
         String operationsFilePath = "output/operations.csv";
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(operationsFilePath, true))) {

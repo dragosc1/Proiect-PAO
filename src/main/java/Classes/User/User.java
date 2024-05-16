@@ -11,6 +11,7 @@ public class User {
     private String address;
     private String phoneNumber;
 
+    // user constructor
     public User(int id, String name, String address, String phoneNumber) {
         this.id = id;
         this.name = name;
@@ -43,6 +44,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    // user equals operator
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -58,6 +60,7 @@ public class User {
                 Objects.equals(phoneNumber, user.phoneNumber);
     }
 
+    // user string representation
     @Override
     public String toString() {
         return "User{" +
@@ -73,12 +76,15 @@ public class User {
         return Objects.hash(id, name, address, phoneNumber);
     }
 
+    // user parse result set
     public static User parseResultSet(ResultSet resultSet) throws SQLException {
+        // gather data
         int id = resultSet.getInt("id");
         String name = resultSet.getString("name");
         String address = resultSet.getString("address");
         String phoneNumber = resultSet.getString("phoneNumber");
 
+        // return user
         return new User(id, name, address, phoneNumber);
     }
 

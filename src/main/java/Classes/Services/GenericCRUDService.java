@@ -7,6 +7,7 @@ import Classes.RepositoriesImplementation.GenericCRUDRepositoryImplementation;
 import java.util.List;
 
 public class GenericCRUDService<T> {
+    // Singleton and repository pattern
     private GenericCRUDRepository<T> repository;
     private static GenericCRUDService<?> instance;
 

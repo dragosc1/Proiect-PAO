@@ -20,6 +20,7 @@ public class Loan {
     private int user_id;
     private int publication_id;
 
+    // Lona constructor
     public Loan(int id, User user, Publication publication, Date loanDate, Date returnDate, int userId, int publicationId) {
         this.id = id;
         this.user = user;
@@ -63,6 +64,7 @@ public class Loan {
         this.return_date = returnDate;
     }
 
+    // Loan representation
     @Override
     public String toString() {
         return "Loan{" +
@@ -74,6 +76,7 @@ public class Loan {
                 '}';
     }
 
+    // Loan equals operator
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -94,9 +97,9 @@ public class Loan {
         return Objects.hash(user, publication, loan_date, return_date);
     }
 
+    // Loan parse result set
     public static Loan parseResultSet(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("id");
-        // Assuming user_id and publication_id are retrieved from the ResultSet
         int userId = resultSet.getInt("user_id");
         int publicationId = resultSet.getInt("publication_id");
         Date loanDate = resultSet.getDate("loan_date");
@@ -105,6 +108,7 @@ public class Loan {
         GenericCRUDService<User> userService = GenericCRUDService.getInstance();
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
 
+        // get user and publication
         userService.openConnection();
         publicationService.openConnection();
         User user = userService.retrieveOneId(User.class, userId);
@@ -112,6 +116,7 @@ public class Loan {
         userService.closeConnection();
         publicationService.closeConnection();
 
+        // return Loan
         return new Loan(id, user, publication, loanDate, returnDate, userId, publicationId);
     }
 }

@@ -23,12 +23,15 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
         return clazz.getSimpleName().toLowerCase();
     }
 
+    // insert data (CREATE)
     public void insert(T data) {
         try {
+            // get table name of T
             Class<?> clazz = data.getClass();
             String tableName = getTableName(clazz).toUpperCase();
             tableName = "\"" + tableName + "\"";
 
+            // get all fields from base and supperclass of T (if it exists)
             List<Field> allFields = new ArrayList<>();
             Collections.addAll(allFields, clazz.getDeclaredFields());
 
@@ -39,8 +42,8 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             }
 
             Field[] fields = allFields.toArray(new Field[0]);
-            // Get metadata of the table to retrieve its column names
 
+            // get all table data fields which has name of tableName
             GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
             publicationService.openConnection();
             ResultSetMetaData metaData = connection.createStatement().executeQuery("SELECT * FROM " + tableName).getMetaData();
@@ -52,6 +55,7 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             StringBuilder columns = new StringBuilder();
             StringBuilder values = new StringBuilder();
 
+            // insert to table columns data
             for (Field field : fields) {
                 String fieldName = field.getName().toLowerCase();
                 if (tableColumnNames.contains(fieldName)) {
@@ -76,7 +80,6 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
                     if (field.getType() == Date.class) {
                         if (field.get(data) == null)
                             statement.setObject(index++, null);
-                            // If the field is of type Date, use setTimestamp instead of setObject
                         else statement.setTimestamp(index++, new Timestamp(((Date) field.get(data)).getTime()));
                     } else {
                         statement.setObject(index++, field.get(data));
@@ -98,12 +101,14 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
     public List<T> retrieveAll(Class<T> clazz) {
         List<T> result = new ArrayList<T>();
         try {
+            // get table name of T
             String tableName = getTableName(clazz).toUpperCase();
             tableName = "\"" + tableName + "\"";
             String sql = "SELECT * FROM " + tableName;
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
 
+            // return and parse result set as List<T>
             Method parseMethod = clazz.getDeclaredMethod("parseResultSet", ResultSet.class);
 
             while (resultSet.next()) {
@@ -127,11 +132,14 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
     public T retrieveOneId(Class<T> clazz, int id) {
         T result = null;
         try {
+            // get table name of T
             String tableName = getTableName(clazz).toUpperCase();
             tableName = "\"" + tableName + "\"";
             String sql = "SELECT * FROM " + tableName + " WHERE id = " + id;
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
+
+            // return and parse result set as T
 
             Method parseMethod = clazz.getDeclaredMethod("parseResultSet", ResultSet.class);
 
@@ -155,10 +163,12 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
     // Method to delete data from database
     public void delete(T data) {
         try {
+            // get table name of T
             Class<?> clazz = data.getClass();
             String tableName = getTableName(clazz).toUpperCase();
             tableName = "\"" + tableName + "\"";
 
+            // get all fields from base and supperclass of T (if it exists)
             List<Field> allFields = new ArrayList<>();
             Collections.addAll(allFields, clazz.getDeclaredFields());
 
@@ -169,7 +179,6 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             }
 
             Field[] fields = allFields.toArray(new Field[0]);
-            // Get metadata of the table to retrieve its column names
             ResultSetMetaData metaData = connection.createStatement().executeQuery("SELECT * FROM " + tableName).getMetaData();
             int columnCount = metaData.getColumnCount();
 
@@ -190,10 +199,10 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
                 condition.setLength(condition.length() - 5);
             }
 
+            // delete the data
             String sql = "DELETE FROM " + tableName + " WHERE " + condition.toString();
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            // Set parameter values based on the fields of the data object
             int index = 1;
             for (Field field : fields) {
                 String fieldName = field.getName().toLowerCase();
@@ -202,7 +211,6 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
                     if (field.getType() == Date.class) {
                         if (field.get(data) == null)
                             statement.setObject(index++, null);
-                            // If the field is of type Date, use setTimestamp instead of setObject
                         else statement.setTimestamp(index++, new Timestamp(((Date) field.get(data)).getTime()));
                     } else {
                         statement.setObject(index++, field.get(data));
@@ -219,9 +227,11 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
 
     public void deleteAll(Class<?> clazz) {
         try {
+            // get table name
             String tableName = getTableName(clazz).toUpperCase();
             tableName = "\"" + tableName + "\"";
 
+            // delete all from table
             String sql = "DELETE FROM " + tableName;
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.executeUpdate();
@@ -236,10 +246,12 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
     // Method to update data from the database
     public void update(T oldData, T newData) {
         try {
+            // get table name
             Class<?> clazz = oldData.getClass();
             String tableName = getTableName(clazz).toUpperCase();
             tableName = "\"" + tableName + "\"";
 
+            // get all fields from base and supperclass of T (if it exists)
             List<Field> allFields = new ArrayList<>();
             Collections.addAll(allFields, clazz.getDeclaredFields());
 
@@ -252,7 +264,6 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             Field[] fields = allFields.toArray(new Field[0]);
             GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
             publicationService.openConnection();
-            // Get metadata of the table to retrieve its column names
             ResultSetMetaData metaData = connection.createStatement().executeQuery("SELECT * FROM " + tableName).getMetaData();
             int columnCount = metaData.getColumnCount();
 
@@ -272,12 +283,12 @@ public class GenericCRUDRepositoryImplementation<T> implements GenericCRUDReposi
             if (!setValues.isEmpty()) {
                 setValues.deleteCharAt(setValues.length() - 1);
             }
+            // update the data
 
             String condition = "id=?"; // Assuming 'id' is the primary key field
             String sql = "UPDATE " + tableName + " SET " + setValues.toString() + " WHERE " + condition;
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            // Set parameter values based on the fields of the newData object
             int index = 1;
             for (Field field : fields) {
                 String fieldName = field.getName().toLowerCase();

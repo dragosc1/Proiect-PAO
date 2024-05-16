@@ -17,6 +17,7 @@ public class Publication {
     protected Integer author_id;
     protected Integer section_id;
 
+    // Publication constructor
     public Publication(int id, String title, Author author, Section section, int publicationYear, int numberOfCopies) {
         this.title = title;
         this.author = author;
@@ -81,6 +82,7 @@ public class Publication {
         this.number_of_copies = numberOfCopies;
     }
 
+    // equals operator
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -97,6 +99,7 @@ public class Publication {
                 Objects.equals(section, publication.section);
     }
 
+    // publication string representation
     @Override
     public String toString() {
         return "Publication{" +
@@ -114,7 +117,9 @@ public class Publication {
         return Objects.hash(title, author, section, publication_year, number_of_copies);
     }
 
+    // publication parse result set
     public static Publication parseResultSet(ResultSet resultSet) throws SQLException {
+        // gather data
         int id = resultSet.getInt("id");
         String title = resultSet.getString("title");
         Integer authorId = resultSet.getInt("author_id");
@@ -122,6 +127,7 @@ public class Publication {
         int publicationYear = resultSet.getInt("publication_year");
         int numberOfCopies = resultSet.getInt("number_of_copies");
 
+        // obtain author and section
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
 
@@ -140,6 +146,7 @@ public class Publication {
         authorService.closeConnection();
         sectionService.closeConnection();
 
+        // return publication
         return new Publication(id, title, author, section, publicationYear, numberOfCopies);
     }
 }

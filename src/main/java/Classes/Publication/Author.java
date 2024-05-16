@@ -11,6 +11,7 @@ public class Author {
     private String name;
     private String firstName;
 
+    // Author constructor
     public Author(int id, String lastName, String firstName) {
         this.id = id;
         this.name = lastName;
@@ -38,6 +39,7 @@ public class Author {
         this.firstName = firstName;
     }
 
+    // Author equals operator
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -52,6 +54,7 @@ public class Author {
                 Objects.equals(firstName, other.firstName);
     }
 
+    // Author string representation
     @Override
     public String toString() {
         return "Author{" +
@@ -66,12 +69,14 @@ public class Author {
         return Objects.hash(id, name, firstName);
     }
 
+    // Author parse result set
     public static Author parseResultSet(ResultSet resultSet) throws SQLException {
+        // gather data
         int id = resultSet.getInt("id");
         String name = resultSet.getString("name");
         String firstname = resultSet.getString("firstname");
 
-
+        // return author
         return new Author(id, name, firstname);
     }
 }

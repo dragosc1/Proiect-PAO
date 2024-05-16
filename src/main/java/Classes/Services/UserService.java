@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class UserService {
+    // Singleton pattern
     private static UserService instance;
 
     private Connection connection;

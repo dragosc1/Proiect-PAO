@@ -10,6 +10,7 @@ import java.util.Objects;
 public class Newspaper extends Publication {
     private Date publication_date;
 
+    // Newspaper constructor
     public Newspaper(int id, String title, Author author, Section section, int publicationYear, int numberOfCopies, Date publicationDate) {
         super(id, title, author, section, publicationYear, numberOfCopies);
         this.publication_date = publicationDate;
@@ -27,6 +28,7 @@ public class Newspaper extends Publication {
         this.publication_date = publicationDate;
     }
 
+    // newspaper string representation
     @Override
     public String toString() {
         return "Newspaper{" +
@@ -40,7 +42,9 @@ public class Newspaper extends Publication {
                 '}';
     }
 
+    // newspaper parse result set
     public static Newspaper parseResultSet(ResultSet resultSet) throws SQLException {
+        // gather data
         int id = resultSet.getInt("id");
 
         GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
@@ -55,6 +59,7 @@ public class Newspaper extends Publication {
         int numberOfCopies = publication.number_of_copies;
         Date publicationDate = resultSet.getDate("publication_date");
 
+        // obtain author and section
         GenericCRUDService<Author> authorService = GenericCRUDService.getInstance();
         GenericCRUDService<Section> sectionService = GenericCRUDService.getInstance();
         authorService.openConnection();
@@ -72,6 +77,7 @@ public class Newspaper extends Publication {
         authorService.closeConnection();
         sectionService.closeConnection();
 
+        // return newspaper
         return new Newspaper(id, title, author, section, publicationYear, numberOfCopies, publicationDate);
     }
 }

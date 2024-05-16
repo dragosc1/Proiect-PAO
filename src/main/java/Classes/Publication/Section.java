@@ -10,6 +10,7 @@ public class Section {
     private String name;
     private String description;
 
+    // Section constructor
     public Section(int id, String name, String description) {
         this.id = id;
         this.name = name;
@@ -33,6 +34,7 @@ public class Section {
         return id;
     }
 
+    // equals operator
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -52,6 +54,7 @@ public class Section {
         return Objects.hash(id, name, description); // Include description in hash calculation
     }
 
+    // section string representation
     @Override
     public String toString() {
         return "Section{" +
@@ -61,12 +64,15 @@ public class Section {
                 '}';
     }
 
+    // Section parse result set
     public static Section parseResultSet(ResultSet resultSet) throws SQLException {
+        // gather data
         int id = resultSet.getInt("id");
         String name = resultSet.getString("name");
-        String description = resultSet.getString("description"); // Retrieve description from result set
+        String description = resultSet.getString("description");
 
-        return new Section(id, name, description); // Pass description to constructor
+        // return section
+        return new Section(id, name, description);
     }
 
 }
