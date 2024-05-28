@@ -1,24 +1,42 @@
 nume_actiune,   timestamp
-Search publication from section Fiction, 	2024-05-16 14:27:44
-Display all library users, 	2024-05-16 14:27:44
-Display all types of publications ordered by title, 	2024-05-16 14:27:46
-Display all publications which can be loaned, 	2024-05-16 14:27:46
-Search publications borrowed by user 1, 	2024-05-16 14:27:47
-User 1 has return publication with id 1, 	2024-05-16 14:27:47
-Display books sorted by publication year, 	2024-05-16 14:27:48
-Display magazines sorted by number of copies, 	2024-05-16 14:27:48
-Display publications sorted by author name, 	2024-05-16 14:27:49
-Delete newspapers from year: 2022, 	2024-05-16 14:27:49
-Search publication from section Fiction, 	2024-05-16 14:53:39
-Display all library users, 	2024-05-16 14:53:39
-Display all types of publications ordered by title, 	2024-05-16 14:53:41
-Display all publications which can be loaned, 	2024-05-16 14:53:41
-Search publications borrowed by user 1, 	2024-05-16 14:53:42
-User 1 has return publication with id 1, 	2024-05-16 14:53:42
-Display books sorted by publication year, 	2024-05-16 14:53:43
-Display magazines sorted by number of copies, 	2024-05-16 14:53:43
-Display publications sorted by author name, 	2024-05-16 14:53:44
-Delete newspapers from year: 2022, 	2024-05-16 14:53:44
-Insert author if it is not, 	2024-05-16 14:53:44
-Insert section if it is not, 	2024-05-16 14:53:44
-Added new publication, 	2024-05-16 14:53:44
+Search publication from section Fiction, 	2024-05-16 18:34:10
+Display all library users, 	2024-05-16 18:34:10
+Display all types of publications ordered by title, 	2024-05-16 18:34:14
+Display all publications which can be loaned, 	2024-05-16 18:34:15
+Search publications by author , 	2024-05-16 18:34:17
+Search publications borrowed by user 1, 	2024-05-16 18:34:17
+User 1 has return publication with id 1, 	2024-05-16 18:34:18
+Display books sorted by publication year, 	2024-05-16 18:34:19
+Display magazines sorted by number of copies, 	2024-05-16 18:34:19
+Display publications sorted by author name, 	2024-05-16 18:34:21
+Delete newspapers from year: 2022, 	2024-05-16 18:34:21
+Insert author if it is not, 	2024-05-16 18:34:21
+Insert section if it is not, 	2024-05-16 18:34:21
+Added new publication, 	2024-05-16 18:34:22
+Search publication from section Fiction, 	2024-05-28 13:30:19
+Display all publications which can be loaned, 	2024-05-28 13:31:44
+Display magazines sorted by number of copies, 	2024-05-28 13:32:27
+Added new publication, 	2024-05-28 13:41:26
+Insert author if it is not, 	2024-05-28 13:44:18
+Insert section if it is not, 	2024-05-28 13:44:18
+Added new publication, 	2024-05-28 13:44:18
+Display all types of publications ordered by title, 	2024-05-28 13:45:19
+Delete newspapers from year: 2022, 	2024-05-28 13:45:30
+Display publications sorted by author name, 	2024-05-28 13:45:43
+Display all library users, 	2024-05-28 13:47:42
+Insert author if it is not, 	2024-05-28 13:54:56
+Insert section if it is not, 	2024-05-28 13:54:56
+Added new book, 	2024-05-28 13:54:56
+Insert author if it is not, 	2024-05-28 13:57:35
+Insert section if it is not, 	2024-05-28 13:57:35
+Added new book, 	2024-05-28 13:57:35
+Insert author if it is not, 	2024-05-28 14:31:46
+Insert section if it is not, 	2024-05-28 14:31:46
+Added new Magazine, 	2024-05-28 14:31:46
+Insert author if it is not, 	2024-05-28 14:32:22
+Insert section if it is not, 	2024-05-28 14:32:22
+Added new Newspaper, 	2024-05-28 14:32:22
+User 1 has return publication with id 1, 	2024-05-28 14:47:00
+Added new loan for user 1 with publication 4, 	2024-05-28 14:48:13
+User 1 has return publication with id 1, 	2024-05-28 14:50:39
+Added new loan for user 1 with publication 4, 	2024-05-28 14:51:04

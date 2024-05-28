@@ -1,6 +1,7 @@
 package org.example;
 
 import Classes.Actions.Loan;
+import Classes.Menu.Menu;
 import Classes.Publication.*;
 import Classes.Services.*;
 import Classes.User.User;
@@ -252,81 +253,8 @@ public class Main {
         // Seeding data
         seeding();
 
-        // 1. Search all publications in a section
-        PublicationService publicationService = PublicationService.getInstance();
-        publicationService.openConnection();
-        publicationService.searchPublicationsFromASection("Fiction");
-        publicationService.closeConnection();
-
-        // 2. Show all library users
-        UserService userService = UserService.getInstance();
-        userService.displayAllLibraryUsers();
-        userService.closeConnection();
-
-        // 3. Display all books / magazines / newspapers ordered by title
-        publicationService.openConnection();
-        publicationService.DisplayAllTypesOfPublicationsOrderedByTitle();
-        publicationService.closeConnection();
-
-        // 4. Display all publications which can be loaned
-        publicationService.openConnection();
-        publicationService.displayAllPublicationsWhichCanBeLoaned();
-        publicationService.closeConnection();
-
-        // 5. Display all publications made by an author
-        publicationService.openConnection();
-        publicationService.searchPublicationsByAuthor("King", "Stephen");
-        publicationService.closeConnection();
-
-        // 6. Display all publications loaned by a user
-        LoanService loanService = LoanService.getInstance();
-        loanService.openConnection();
-        loanService.searchPublicationsBorrowedByUser(1);
-        loanService.closeConnection();
-
-        // 7. Make a query such that you can return a Publication from a user perspective.
-        loanService.openConnection();
-        loanService.returnPublication(1, 1);
-        loanService.closeConnection();
-
-        // 8. Display books sorted by publication year
-        publicationService.openConnection();
-        publicationService.displayBooksSortedByPublicationYear();
-        publicationService.closeConnection();
-
-        // 9. Display magazines sorted by number of copies
-        publicationService.openConnection();
-        publicationService.displayMagazinesSortedByNumberOfCopies();
-        publicationService.closeConnection();
-
-        // 10. Display publications sorted by author name
-        publicationService.openConnection();
-        publicationService.displayPublicationsSortedByAuthorName();
-        publicationService.closeConnection();
-
-        // 11. Delete newspapers from a year
-        publicationService.openConnection();
-        publicationService.deleteNewspapersFromYear(2022);
-        publicationService.closeConnection();
-
-        // 12. Insert an author
-        AuthorService authorService = AuthorService.getInstance();
-        authorService.openConnection();
-        authorService.insertAuthorIfItsNot("King", "Stephen2");
-
-        // 13. Insert a section
-        SectionService sectionService = SectionService.getInstance();
-        sectionService.openConnection();
-        sectionService.insertSectionIFItsNot("Fiction2", "some description");
-
-        // 14. Insert a new publication which is neither a book / newspaper / magazine
-        Author author = authorService.getAuthorByFirstAndLastName("King", "Stephen2");
-        Section section = sectionService.retrieveSectionByName("Fiction2");
-        Publication publication = new Publication(21, "The shining 2", author, section, 1899, 3);
-        publicationService.openConnection();
-        publicationService.addNewPublication(publication);
-        publicationService.closeConnection();
-        authorService.closeConnection();
-        sectionService.closeConnection();
+        // Menu
+        Menu menu = Menu.getInstance();
+        menu.displayMenu();
     }
 }

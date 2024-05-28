@@ -119,4 +119,8 @@ public class Loan {
         // return Loan
         return new Loan(id, user, publication, loanDate, returnDate, userId, publicationId);
     }
+
+    public int getId() {
+        return id;
+    }
 }

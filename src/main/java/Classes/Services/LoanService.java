@@ -175,4 +175,45 @@ public class LoanService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return now.format(formatter);
     }
+
+    public void addNewLoan(Loan loan) {
+        if (!canMakeLoan(loan)) {
+            System.out.println("The user cannot make a new loan. Either they have active loans or the publication is not available.");
+            return;
+        }
+
+        try {
+            // Insert new loan record into the Loan table
+            String sql = "INSERT INTO Loan (id, user_id, publication_id, loan_date, return_date) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, loan.getId()); // Assuming getId() retrieves the loan's ID
+            statement.setInt(2, loan.getUser().getId());
+            statement.setInt(3, loan.getPublication().getId());
+            statement.setDate(4, new java.sql.Date(System.currentTimeMillis())); // Convert to java.sql.Date
+            statement.setNull(5, java.sql.Types.DATE); // Initially, the return_date is null
+
+            statement.executeUpdate();
+
+            System.out.println("Loan added successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        writeToAuditService(List.of("Added new loan for user " + loan.getUser().getId() + " with publication " + loan.getPublication().getId(), getCurrentTimestamp()));
+    }
+
+    public int getNextId() {
+        int nextId = 0;
+        try {
+            String sql = "SELECT MAX(id) AS max_id FROM Loan";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                nextId = resultSet.getInt("max_id") + 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nextId;
+    }
 }

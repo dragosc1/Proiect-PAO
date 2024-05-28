@@ -89,6 +89,7 @@ public class PublicationService {
             }
         }
         publicationService.closeConnection();
+        writeToAuditService(List.of("Search publications by author ", getCurrentTimestamp()));
     }
 
     public void openConnection() {
@@ -294,5 +295,60 @@ public class PublicationService {
         publicationService.insert(publication);
         publicationService.closeConnection();
         writeToAuditService(List.of("Added new publication", getCurrentTimestamp()));
+    }
+
+    public int getNextId() {
+        int nextId = 0;
+        try {
+            String sql = "SELECT MAX(id) AS max_id FROM Publication";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                nextId = resultSet.getInt("max_id") + 1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nextId;
+    }
+
+    public void addNewBook(Book book) {
+        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
+        Publication publication = new Publication(book.getId(), book.getTitle(), book.getAuthor(), book.getSection(), book.getPublicationYear(), book.getNumberOfCopies());
+        publicationService.insert(publication);
+        publicationService.closeConnection();
+        GenericCRUDService<Book> bookService = GenericCRUDService.getInstance();
+        bookService.openConnection();
+        bookService.insert(book);
+        bookService.closeConnection();
+        writeToAuditService(List.of("Added new book", getCurrentTimestamp()));
+    }
+
+    public void addNewMagazine(Magazine magazine) {
+        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
+        Publication publication = new Publication(magazine.getId(), magazine.getTitle(), magazine.getAuthor(), magazine.getSection(), magazine.getPublicationYear(), magazine.getNumberOfCopies());
+        publicationService.insert(publication);
+        publicationService.closeConnection();
+        GenericCRUDService<Magazine> magazineService = GenericCRUDService.getInstance();
+        magazineService.openConnection();
+        magazineService.insert(magazine);
+        magazineService.closeConnection();
+        writeToAuditService(List.of("Added new Magazine", getCurrentTimestamp()));
+    }
+
+    public void addNewNewspaper(Newspaper newspaper) {
+        GenericCRUDService<Publication> publicationService = GenericCRUDService.getInstance();
+        publicationService.openConnection();
+        Publication publication = new Publication(newspaper.getId(), newspaper.getTitle(), newspaper.getAuthor(), newspaper.getSection(), newspaper.getPublicationYear(), newspaper.getNumberOfCopies());
+        publicationService.insert(publication);
+        publicationService.closeConnection();
+        GenericCRUDService<Newspaper> newspaperService = GenericCRUDService.getInstance();
+        newspaperService.openConnection();
+        newspaperService.insert(newspaper);
+        newspaperService.closeConnection();
+        writeToAuditService(List.of("Added new Newspaper", getCurrentTimestamp()));
     }
 }
